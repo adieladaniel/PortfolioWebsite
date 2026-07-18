@@ -1,0 +1,26 @@
+.ticker {
+  display: inline-block;
+  position: relative;
+}
+
+.role {
+  display: inline-block;
+  animation: fadeSlideIn 0.5s ease;
+}
+
+@keyframes fadeSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(0.3em);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .role {
+    animation: none;
+  }
+}

@@ -1,0 +1,54 @@
+.section {
+  position: relative;
+  padding: var(--space-24) var(--space-6);
+  max-width: var(--content-max-width);
+  margin: 0 auto;
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.section[data-revealed='true'] {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Nudge everything — the heading bar, its rule, and the content block —
+   toward one side of the normal centered column together, rather than
+   pinning content to the viewport edge (too extreme) or leaving the
+   heading full-width while only the content shifts (heading no longer
+   matches the card it labels). */
+.section[data-align='left'] {
+  align-items: flex-start;
+}
+
+.section[data-align='right'] {
+  align-items: flex-end;
+}
+
+.section[data-align='left'] > *,
+.section[data-align='right'] > * {
+  max-width: 40rem;
+  width: 100%;
+}
+
+@media (max-width: 900px) {
+  .section[data-align='left'],
+  .section[data-align='right'] {
+    align-items: stretch;
+  }
+  .section[data-align='left'] > *,
+  .section[data-align='right'] > * {
+    max-width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .section {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}

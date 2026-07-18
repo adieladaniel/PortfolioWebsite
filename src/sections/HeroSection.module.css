@@ -1,0 +1,212 @@
+.hero {
+  position: relative;
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  padding: var(--space-8) clamp(var(--space-8), 6vw, 5rem);
+  overflow: hidden;
+}
+
+/* No boxed panel behind the text column (deliberate) so a soft scrim does
+   the legibility work instead — a horizontal band roughly matching where
+   the text column sits, not the full viewport. */
+.scrim {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse 62% 68% at 32% 48%,
+    rgba(18, 14, 12, 0.9) 0%,
+    rgba(18, 14, 12, 0.68) 50%,
+    transparent 80%
+  );
+  pointer-events: none;
+}
+
+/* Two real columns using the full width — text on one side, the JSON card
+   on the other — rather than either edge-hugging a single row or leaving
+   the right half empty. Neither column touches the viewport edge; both sit
+   inside the section's own padding. */
+.inner {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 88rem;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+  gap: clamp(2.5rem, 6vw, 5rem);
+  align-items: center;
+}
+
+.textColumn {
+  min-width: 0;
+}
+
+.cardColumn {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: var(--fs-sm);
+  color: var(--color-amber);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0;
+  animation: fadeUp 0.7s ease 0.1s forwards;
+}
+
+.eyebrow::before {
+  content: '// ';
+  color: var(--color-text-tertiary);
+}
+
+.name {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(2.75rem, 6vw, 5.5rem);
+  line-height: 0.98;
+  letter-spacing: -0.03em;
+  margin-top: var(--space-3);
+  opacity: 0;
+  animation: fadeUp 0.7s ease 0.22s forwards;
+}
+
+.roleLine {
+  font-family: var(--font-mono);
+  font-size: var(--fs-lg);
+  color: var(--color-amber);
+  margin-top: var(--space-5);
+  opacity: 0;
+  animation: fadeUp 0.7s ease 0.34s forwards;
+}
+
+.roleLine::before {
+  content: '> ';
+  color: var(--color-text-tertiary);
+}
+
+.headline {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: var(--fs-lg);
+  color: var(--color-text-secondary);
+  max-width: 34ch;
+  margin-top: var(--space-4);
+  opacity: 0;
+  animation: fadeUp 0.7s ease 0.44s forwards;
+}
+
+.statRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-top: var(--space-8);
+  opacity: 0;
+  animation: fadeUp 0.7s ease 0.56s forwards;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--color-border);
+  background: var(--color-bg-panel);
+  backdrop-filter: blur(var(--panel-blur));
+  -webkit-backdrop-filter: blur(var(--panel-blur));
+  box-shadow: var(--panel-shadow);
+}
+
+.statValue {
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-size: var(--fs-lg);
+  color: var(--color-hot);
+}
+
+.statLabel {
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  color: var(--color-text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+}
+
+.bio {
+  font-size: var(--fs-sm);
+  color: var(--color-text-tertiary);
+  max-width: 52ch;
+  margin-top: var(--space-6);
+  line-height: 1.6;
+  opacity: 0;
+  animation: fadeUp 0.7s ease 0.68s forwards;
+}
+
+.scrollCue {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-top: var(--space-12);
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  color: var(--color-text-tertiary);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  opacity: 0;
+  animation: fadeUp 0.7s ease 0.8s forwards;
+}
+
+.scrollLine {
+  width: 32px;
+  height: 1px;
+  background: var(--color-border-strong);
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 900px) {
+  .inner {
+    grid-template-columns: 1fr;
+  }
+
+  .cardColumn {
+    order: -1;
+    justify-content: center;
+  }
+
+  .scrim {
+    background: radial-gradient(
+      ellipse 90% 70% at 50% 40%,
+      rgba(18, 14, 12, 0.85) 0%,
+      rgba(18, 14, 12, 0.55) 50%,
+      transparent 85%
+    );
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .eyebrow,
+  .name,
+  .roleLine,
+  .headline,
+  .statRow,
+  .bio,
+  .scrollCue {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}

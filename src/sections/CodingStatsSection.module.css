@@ -1,0 +1,144 @@
+/* wider than the standard zigzag column — three tier columns need the room */
+:global(#coding-stats[data-align]) > :global(*) {
+  max-width: 46rem;
+}
+
+.panel {
+  padding: var(--space-8);
+}
+
+.headerRow {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-6);
+  flex-wrap: wrap;
+  margin-bottom: var(--space-8);
+}
+
+.bigNumber {
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-size: var(--fs-2xl);
+  color: var(--color-amber);
+  line-height: 1;
+}
+
+.bigNumberLabel {
+  font-family: var(--font-mono);
+  font-size: var(--fs-sm);
+  color: var(--color-text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.codolioLink {
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: var(--fs-sm);
+  color: var(--color-text-secondary);
+  border-bottom: 1px solid var(--color-border-strong);
+  padding-bottom: 2px;
+  transition: color 0.2s ease;
+}
+
+.codolioLink:hover {
+  color: var(--color-amber);
+}
+
+.tiers {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--space-8);
+  margin-bottom: var(--space-12);
+}
+
+.tier {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.tierLabel {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-text-tertiary);
+  margin-bottom: var(--space-1);
+}
+
+.tierDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.topicRow {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: var(--space-3);
+  align-items: center;
+  font-size: var(--fs-sm);
+  padding: var(--space-1) var(--space-2);
+  margin-inline: calc(var(--space-2) * -1);
+  transition: background 0.15s ease;
+  cursor: default;
+}
+
+.topicRowHovered {
+  background: rgba(224, 138, 62, 0.1);
+}
+
+.topicName {
+  color: var(--color-text-secondary);
+  transition: color 0.15s ease;
+}
+
+.topicRowHovered .topicName {
+  color: var(--color-text-primary);
+}
+
+.topicBarTrack {
+  grid-column: 1 / -1;
+  height: 3px;
+  background: var(--color-border);
+  position: relative;
+}
+
+.topicBarFill {
+  height: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.topicCount {
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  color: var(--color-text-tertiary);
+}
+
+.languages {
+  display: flex;
+  gap: var(--space-8);
+  flex-wrap: wrap;
+}
+
+.languageStat {
+  font-family: var(--font-mono);
+}
+
+.languageCount {
+  font-size: var(--fs-lg);
+  color: var(--color-text-primary);
+}
+
+.languageName {
+  font-size: var(--fs-xs);
+  color: var(--color-text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}

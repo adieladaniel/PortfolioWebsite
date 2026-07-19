@@ -1,32 +1,75 @@
 import { useEffect, useState } from 'react';
+import { useReducedMotion } from '@/hooks/useReducedMotion';
 import styles from './RoleTicker.module.css';
 
 interface RoleTickerProps {
   roles: string[];
-  intervalMs?: number;
+  typingSpeedMs?: number;
+  deletingSpeedMs?: number;
+  pauseMs?: number;
 }
 
-/** Cycles through a list of role labels with a fade-slide transition; freezes on the first entry under prefers-reduced-motion. */
-export function RoleTicker({ roles, intervalMs = 2600 }: RoleTickerProps) {
-  const [index, setIndex] = useState(0);
+/** Types out each role character by character, pauses, deletes it back out, then types the next — a real typewriter, not a crossfade. Freezes on the first role (fully typed, no delete) under prefers-reduced-motion. */
+export function RoleTicker({ roles, typingSpeedMs = 55, deletingSpeedMs = 30, pauseMs = 1800 }: RoleTickerProps) {
+  const [displayText, setDisplayText] = useState('');
+  const prefersReducedMotion = useReducedMotion();
 
   useEffect(() => {
-    if (roles.length <= 1) return;
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if (roles.length === 0) return;
 
-    const id = window.setInterval(() => {
-      setIndex((i) => (i + 1) % roles.length);
-    }, intervalMs);
-    return () => window.clearInterval(id);
-  }, [roles.length, intervalMs]);
+    if (prefersReducedMotion.current) {
+      setDisplayText(roles[0] ?? '');
+      return;
+    }
 
-  const role = roles[index] ?? roles[0];
+    let cancelled = false;
+    let timeoutId: number;
+    let roleIdx = 0;
+    let charIndex = 0;
+    let deleting = false;
+
+    const tick = () => {
+      if (cancelled) return;
+      const role = roles[roleIdx % roles.length] ?? '';
+
+      if (!deleting) {
+        charIndex++;
+        setDisplayText(role.slice(0, charIndex));
+        if (charIndex >= role.length) {
+          if (roles.length <= 1) return; // one role only — finish typed, stay put
+          timeoutId = window.setTimeout(() => {
+            deleting = true;
+            tick();
+          }, pauseMs);
+          return;
+        }
+        timeoutId = window.setTimeout(tick, typingSpeedMs);
+      } else {
+        charIndex--;
+        setDisplayText(role.slice(0, charIndex));
+        if (charIndex <= 0) {
+          deleting = false;
+          roleIdx++;
+          timeoutId = window.setTimeout(tick, typingSpeedMs);
+          return;
+        }
+        timeoutId = window.setTimeout(tick, deletingSpeedMs);
+      }
+    };
+
+    timeoutId = window.setTimeout(tick, typingSpeedMs);
+
+    return () => {
+      cancelled = true;
+      window.clearTimeout(timeoutId);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [roles]);
 
   return (
     <span className={styles.ticker}>
-      <span key={index} className={styles.role}>
-        {role}
-      </span>
+      <span className={styles.text}>{displayText}</span>
+      <span className={styles.cursor} aria-hidden="true" />
     </span>
   );
 }

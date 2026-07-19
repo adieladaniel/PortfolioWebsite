@@ -1,41 +1,81 @@
-.list {
+.slide {
+  flex: 0 0 auto;
+  width: min(26rem, 82vw);
+  padding: var(--space-8) var(--space-8) var(--space-8) 0;
+  margin-left: var(--space-8);
+  border-left: 1px solid var(--color-divider);
+  padding-left: var(--space-8);
   display: flex;
   flex-direction: column;
-  gap: var(--space-6);
+  gap: var(--space-4);
 }
 
-.entry {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: var(--space-2) var(--space-6);
-  padding: var(--space-6);
+.slide:first-child {
+  margin-left: 0;
+  border-left: none;
+  padding-left: 0;
 }
 
-.institution {
+.number {
   font-family: var(--font-display);
-  font-weight: 600;
-  font-size: var(--fs-md);
+  font-weight: 700;
+  font-size: var(--fs-number);
+  color: var(--color-text-primary);
+  line-height: 1;
 }
 
-.detail {
-  grid-column: 1;
-  color: var(--color-text-secondary);
-  font-size: var(--fs-sm);
-  max-width: 60ch;
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
 }
 
-.meta {
-  grid-column: 2;
-  grid-row: 1 / span 2;
-  text-align: right;
+.title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--fs-lg);
+  color: var(--color-text-primary);
+}
+
+.dates {
   font-family: var(--font-mono);
   font-size: var(--fs-xs);
   color: var(--color-text-tertiary);
-  white-space: nowrap;
+  letter-spacing: 0.04em;
+  margin-top: var(--space-2);
 }
 
-.gpa {
-  color: var(--color-amber);
-  display: block;
+.subtitle {
+  font-size: var(--fs-sm);
+  color: var(--color-accent);
   margin-top: var(--space-2);
+}
+
+.detail {
+  font-size: var(--fs-sm);
+  color: var(--color-text-secondary);
+  margin-top: 2px;
+}
+
+/* Small sub-heading marking where certifications start within the same
+   horizontal-scroll track — its own label rather than folding silently into
+   the numbered education rows. Top-aligned with padding matching .slide's,
+   so it sits at the same baseline as the "01"/"02" numbers instead of
+   floating vertically centered in mostly-empty space. */
+.divider {
+  flex: 0 0 auto;
+  width: min(11rem, 40vw);
+  padding: var(--space-8) var(--space-8) var(--space-8) var(--space-8);
+  margin-left: var(--space-8);
+  border-left: 1px solid var(--color-divider);
+  display: flex;
+  align-items: flex-start;
+}
+
+.dividerLabel {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--fs-lg);
+  line-height: 1.25;
+  color: var(--color-accent);
 }

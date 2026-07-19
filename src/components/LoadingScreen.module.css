@@ -3,10 +3,8 @@
   inset: 0;
   z-index: 50;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: var(--space-6);
   background: var(--color-bg);
   transition: opacity 0.4s ease;
   opacity: 1;
@@ -17,59 +15,116 @@
   pointer-events: none;
 }
 
-.cubes {
+.frame {
+  position: relative;
   display: flex;
-  gap: var(--space-3);
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-12) clamp(3.5rem, 12vw, 6rem);
 }
 
-.cube {
-  width: 14px;
-  height: 14px;
-  border: 1px solid var(--color-amber);
-  animation: tumble 1.6s ease-in-out infinite;
+/* HUD-style targeting-frame corners rather than a plain box — matches the
+   "cyber" direction elsewhere on the site (the Experience section's glowing
+   circuit lines, the cursor suggestions leaning the same way). */
+.bracket {
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  border: 1px solid rgba(var(--color-accent-rgb), 0.55);
 }
 
-.cube:nth-child(2) {
-  animation-delay: 0.2s;
-  border-color: var(--color-rust);
+.bracket[data-corner='tl'] {
+  top: 0;
+  left: 0;
+  border-right: none;
+  border-bottom: none;
 }
 
-.cube:nth-child(3) {
-  animation-delay: 0.4s;
-  border-color: var(--color-hot);
+.bracket[data-corner='tr'] {
+  top: 0;
+  right: 0;
+  border-left: none;
+  border-bottom: none;
 }
 
-@keyframes tumble {
-  0%,
-  100% {
-    transform: rotate(0deg) scale(1);
-  }
-  50% {
-    transform: rotate(180deg) scale(0.8);
-  }
+.bracket[data-corner='bl'] {
+  bottom: 0;
+  left: 0;
+  border-right: none;
+  border-top: none;
 }
 
-.barTrack {
-  width: 160px;
-  height: 2px;
-  background: var(--color-border);
+.bracket[data-corner='br'] {
+  bottom: 0;
+  right: 0;
+  border-left: none;
+  border-top: none;
 }
 
-.barFill {
-  height: 100%;
-  background: var(--color-amber);
-  transition: width 0.2s ease;
+.label {
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--color-text-tertiary);
 }
 
 .percent {
   font-family: var(--font-mono);
-  font-size: var(--fs-xs);
+  font-weight: 500;
+  font-size: clamp(2.75rem, 8vw, 4.25rem);
+  line-height: 1;
+  color: var(--color-accent);
+  font-variant-numeric: tabular-nums;
+  text-shadow: 0 0 20px rgba(var(--color-accent-rgb), 0.55), 0 0 52px rgba(var(--color-accent-rgb), 0.25);
+}
+
+.percentSign {
+  font-size: 0.45em;
   color: var(--color-text-tertiary);
-  letter-spacing: 0.08em;
+  text-shadow: none;
+  margin-left: 2px;
+}
+
+.barTrack {
+  position: relative;
+  width: 200px;
+  height: 2px;
+  background: var(--color-border);
+  overflow: hidden;
+  margin-top: var(--space-2);
+}
+
+.barFill {
+  height: 100%;
+  background: var(--color-accent);
+  box-shadow: 0 0 8px rgba(var(--color-accent-rgb), 0.85);
+  transition: width 0.2s ease;
+}
+
+/* A scanning beam sweeps the full track continuously, independent of the
+   actual fill width — reads as "system scanning," not a fill-shimmer, so it
+   still looks alive even at low percentages. */
+.scanline {
+  position: absolute;
+  inset: 0;
+  width: 30%;
+  background: linear-gradient(90deg, transparent, rgba(var(--color-accent-rgb), 0.9), transparent);
+  animation: scan 1.6s ease-in-out infinite;
+}
+
+@keyframes scan {
+  0% {
+    transform: translateX(-120%);
+  }
+  100% {
+    transform: translateX(430%);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .cube {
-    animation: none;
+  .scanline {
+    display: none;
   }
 }

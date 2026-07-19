@@ -3,11 +3,9 @@ import styles from './Section.module.css';
 
 interface SectionProps {
   id: string;
-  /** Zigzags content against the runway visible on the other side; 'center' keeps the old full-width layout. */
-  align?: 'left' | 'right' | 'center';
 }
 
-export function Section({ id, align = 'center', children }: PropsWithChildren<SectionProps>) {
+export function Section({ id, children }: PropsWithChildren<SectionProps>) {
   const ref = useRef<HTMLElement>(null);
   const [revealed, setRevealed] = useState(false);
 
@@ -31,7 +29,7 @@ export function Section({ id, align = 'center', children }: PropsWithChildren<Se
   }, []);
 
   return (
-    <section id={id} ref={ref} className={styles.section} data-revealed={revealed} data-align={align}>
+    <section id={id} ref={ref} className={styles.section} data-revealed={revealed}>
       {children}
     </section>
   );

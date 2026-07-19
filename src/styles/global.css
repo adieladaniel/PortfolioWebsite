@@ -17,6 +17,15 @@
 
 html {
   color-scheme: dark;
+  scroll-behavior: smooth;
+  /* fixed Nav sits on top of anchor-scrolled sections otherwise */
+  scroll-padding-top: var(--nav-height);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
 }
 
 body {
@@ -52,7 +61,7 @@ button {
 }
 
 ::selection {
-  background: var(--color-amber);
+  background: var(--color-accent);
   color: var(--color-bg);
 }
 
@@ -64,7 +73,7 @@ button {
   background: var(--color-bg);
 }
 ::-webkit-scrollbar-thumb {
-  background: var(--color-rust);
+  background: var(--color-accent-soft);
   border: 2px solid var(--color-bg);
 }
 

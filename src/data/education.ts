@@ -9,7 +9,6 @@ export const education: EducationEntry[] = [
     startDate: 'Jul 2023',
     endDate: 'Apr 2027 (Expected)',
     gpa: '8.5 / 10.0 CGPA',
-    milestoneId: 'christ-university',
   },
   {
     institution: "St. George's School",
@@ -17,6 +16,5 @@ export const education: EducationEntry[] = [
     location: 'New Delhi',
     startDate: 'Apr 2022',
     endDate: 'Feb 2023',
-    milestoneId: 'prior-schooling',
   },
 ];

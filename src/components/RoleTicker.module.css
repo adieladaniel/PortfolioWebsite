@@ -1,26 +1,36 @@
 .ticker {
-  display: inline-block;
-  position: relative;
+  display: inline-flex;
+  align-items: baseline;
+  white-space: pre;
 }
 
-.role {
-  display: inline-block;
-  animation: fadeSlideIn 0.5s ease;
+.text {
+  white-space: pre;
 }
 
-@keyframes fadeSlideIn {
-  from {
-    opacity: 0;
-    transform: translateY(0.3em);
-  }
-  to {
+.cursor {
+  display: inline-block;
+  width: 3px;
+  height: 0.85em;
+  margin-left: 0.08em;
+  background: currentColor;
+  animation: blink 1s step-end infinite;
+}
+
+@keyframes blink {
+  0%,
+  49% {
     opacity: 1;
-    transform: translateY(0);
+  }
+  50%,
+  100% {
+    opacity: 0;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .role {
+  .cursor {
     animation: none;
+    opacity: 1;
   }
 }

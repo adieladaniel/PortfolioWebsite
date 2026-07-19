@@ -13,8 +13,6 @@ export const projects: Project[] = [
       'Architected and deployed a scalable backend with Node.js and Express.js managing 75+ student records, attendance tracking, and curriculum progress with full CRUD operations.',
       'Designed RESTful APIs with dynamic branch/class-based query filtering, backed by a cloud-hosted MySQL database on Railway using connection pooling and environment-based configuration.',
     ],
-    milestoneId: 'project-scholarsync',
-    geometryVariant: 'scholarsync',
     repo: 'https://github.com/adieladaniel/Student_Progress_Tracker-v2',
   },
   {
@@ -28,8 +26,6 @@ export const projects: Project[] = [
       'Built user-friendly Swing/AWT interfaces enabling seamless customer interactions for account management, transactions, and loan processing.',
       'Integrated a MySQL database for real-time data storage and retrieval, ensuring data integrity and efficient operations for customer records.',
     ],
-    milestoneId: 'project-bankms',
-    geometryVariant: 'bankms',
     repo: 'https://github.com/adieladaniel/Bank-Management-System',
   },
 ];

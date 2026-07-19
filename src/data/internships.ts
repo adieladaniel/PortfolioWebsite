@@ -15,7 +15,6 @@ export const internships: Internship[] = [
       'Implemented intelligent query planning, context-aware follow-up handling, and automated chart generation, cutting manual reporting effort by 80% across a multi-tenant deployment spanning 20+ schools.',
     ],
     tech: ['Python', 'FastAPI', 'Power BI', 'LLM', 'RAG', 'JSON pipelines'],
-    milestoneId: 'internship-edunext',
     link: 'https://github.com/adieladaniel/FinnBot-Financial-AI-Analytics-Engine',
   },
   {
@@ -31,7 +30,6 @@ export const internships: Internship[] = [
       'Ran systematic model experimentation and performance evaluation (accuracy, precision, recall) across transfer learning configurations.',
     ],
     tech: ['Python', 'TensorFlow', 'EfficientNetB0', 'Transfer Learning', 'Deep Learning'],
-    milestoneId: 'internship-ieee',
     link: 'https://github.com/adieladaniel/OncoVision',
   },
 ];

@@ -1,130 +1,309 @@
 .hero {
   position: relative;
-  min-height: 100vh;
-  width: 100%;
-  display: flex;
-  align-items: center;
-  padding: var(--space-8) clamp(var(--space-8), 6vw, 5rem);
+  padding: 0 clamp(var(--space-6), 5vw, var(--space-16)) var(--space-24);
   overflow: hidden;
 }
 
-/* No boxed panel behind the text column (deliberate) so a soft scrim does
-   the legibility work instead — a horizontal band roughly matching where
-   the text column sits, not the full viewport. */
-.scrim {
+.glow {
   position: absolute;
-  inset: 0;
-  background: radial-gradient(
-    ellipse 62% 68% at 32% 48%,
-    rgba(18, 14, 12, 0.9) 0%,
-    rgba(18, 14, 12, 0.68) 50%,
-    transparent 80%
-  );
+  top: -10%;
+  right: -10%;
+  width: 40vw;
+  height: 40vw;
+  min-width: 24rem;
+  min-height: 24rem;
+  background: radial-gradient(circle, rgba(var(--color-accent-rgb), 0.16) 0%, transparent 70%);
   pointer-events: none;
 }
 
-/* Two real columns using the full width — text on one side, the JSON card
-   on the other — rather than either edge-hugging a single row or leaving
-   the right half empty. Neither column touches the viewport edge; both sit
-   inside the section's own padding. */
-.inner {
+/* Exactly one viewport tall (at minimum) so the About Me content below can
+   never peek above the fold on load — it only appears once the user
+   actually scrolls, per Adiel's note that the loading screen shouldn't
+   already show the start of the About copy. */
+.introScreen {
   position: relative;
   z-index: 1;
-  width: 100%;
-  max-width: 88rem;
-  margin: 0 auto;
-  display: grid;
-  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
-  gap: clamp(2.5rem, 6vw, 5rem);
-  align-items: center;
-}
-
-.textColumn {
-  min-width: 0;
-}
-
-.cardColumn {
+  min-height: 100vh;
+  padding-top: calc(var(--nav-height) + var(--space-12));
+  padding-bottom: var(--space-12);
   display: flex;
-  justify-content: flex-start;
+  flex-direction: column;
+  /* centered as one compact group with a fixed gap, not stretched apart via
+     space-between — that left large, uneven voids above/below the avatar
+     once the intro screen was tall enough to guarantee 100vh */
+  justify-content: center;
+  gap: var(--space-12);
 }
 
-.eyebrow {
+@keyframes heroFadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* resumeTab already relies on a static transform (translateY(-50%)
+   rotate(180deg)) for its positioning/orientation — a shared slide-up
+   keyframe touching `transform` would clobber that, so it gets its own
+   opacity-only fade instead. */
+@keyframes heroFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-6);
+  flex-wrap: wrap;
+}
+
+.intro {
+  opacity: 0;
+  animation: heroFadeUp 0.7s ease 0.1s forwards;
+}
+
+.roleWrap {
+  opacity: 0;
+  animation: heroFadeUp 0.7s ease 0.22s forwards;
+}
+
+.stage {
+  opacity: 0;
+  animation: heroFadeUp 0.8s ease 0.34s forwards;
+}
+
+.socials {
+  opacity: 0;
+  animation: heroFadeUp 0.6s ease 0.5s forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .intro,
+  .roleWrap,
+  .stage,
+  .socials,
+  .resumeTab {
+    animation: none;
+    opacity: 1;
+  }
+}
+
+.hello {
   font-family: var(--font-mono);
   font-size: var(--fs-sm);
-  color: var(--color-amber);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  opacity: 0;
-  animation: fadeUp 0.7s ease 0.1s forwards;
-}
-
-.eyebrow::before {
-  content: '// ';
-  color: var(--color-text-tertiary);
+  color: var(--color-accent);
+  letter-spacing: 0.04em;
 }
 
 .name {
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: clamp(2.75rem, 6vw, 5.5rem);
-  line-height: 0.98;
-  letter-spacing: -0.03em;
-  margin-top: var(--space-3);
-  opacity: 0;
-  animation: fadeUp 0.7s ease 0.22s forwards;
+  font-size: var(--fs-2xl);
+  letter-spacing: -0.02em;
+  line-height: 1.02;
+  margin-top: var(--space-2);
 }
 
-.roleLine {
-  font-family: var(--font-mono);
-  font-size: var(--fs-lg);
-  color: var(--color-amber);
-  margin-top: var(--space-5);
-  opacity: 0;
-  animation: fadeUp 0.7s ease 0.34s forwards;
+.roleWrap {
+  text-align: right;
 }
 
-.roleLine::before {
-  content: '> ';
-  color: var(--color-text-tertiary);
-}
-
-.headline {
+.rolePrefix {
   font-family: var(--font-display);
-  font-weight: 400;
-  font-size: var(--fs-lg);
+  font-size: var(--fs-md);
   color: var(--color-text-secondary);
-  max-width: 34ch;
-  margin-top: var(--space-4);
+}
+
+.role {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--fs-xl);
+  color: var(--color-accent);
+  min-height: 1.2em;
+}
+
+.stage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: min(52vh, 34rem);
+}
+
+.stagePlaceholder {
+  width: min(60%, 22rem);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle at 40% 35%, rgba(var(--color-accent-rgb), 0.22), rgba(var(--color-accent-rgb), 0.02) 70%);
+  border: 1px solid var(--color-divider);
+}
+
+.socials {
+  display: flex;
+  gap: var(--space-6);
+}
+
+.socialLink {
+  font-family: var(--font-mono);
+  font-size: var(--fs-sm);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-text-tertiary);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.socialLink:hover {
+  color: var(--color-text-primary);
+  border-color: var(--color-accent);
+}
+
+.resumeTab {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  z-index: 1;
+  writing-mode: vertical-rl;
+  transform: translateY(-50%) rotate(180deg);
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-text-tertiary);
+  text-decoration: none;
+  padding: var(--space-4) var(--space-2);
+  border: 1px solid var(--color-divider);
+  border-right: none;
+  transition: color 0.2s ease, border-color 0.2s ease;
   opacity: 0;
-  animation: fadeUp 0.7s ease 0.44s forwards;
+  animation: heroFadeIn 0.6s ease 0.6s forwards;
+}
+
+.resumeTab:hover {
+  color: var(--color-accent);
+  border-color: var(--color-accent);
+}
+
+.about {
+  position: relative;
+  z-index: 1;
+  max-width: var(--content-max-width);
+  margin: 0 auto;
+  padding-top: var(--space-16);
+}
+
+.aboutText,
+.statRow,
+.skills {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+.about[data-revealed='true'] .aboutText {
+  opacity: 1;
+  transform: none;
+}
+
+.about[data-revealed='true'] .statRow {
+  opacity: 1;
+  transform: none;
+  transition-delay: 0.12s;
+}
+
+.about[data-revealed='true'] .skills {
+  opacity: 1;
+  transform: none;
+  transition-delay: 0.22s;
+}
+
+.skillTag {
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.about[data-revealed='true'] .skillTag {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .aboutText,
+  .statRow,
+  .skills,
+  .skillTag {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* Two balanced columns, both inset within the section's own padding (never
+   pinned to the physical viewport edge) — About copy on the left, stats +
+   skills on the right, in the same row. */
+.aboutGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  gap: clamp(3rem, 6vw, 5rem);
+  align-items: start;
+}
+
+.aboutText {
+  max-width: 34rem;
+}
+
+.aboutSide {
+  display: flex;
+  flex-direction: column;
+}
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: var(--fs-sm);
+  color: var(--color-accent);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: var(--space-4);
+}
+
+.bio {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: var(--fs-lg);
+  line-height: 1.55;
+  color: var(--color-text-secondary);
 }
 
 .statRow {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-3);
-  margin-top: var(--space-8);
-  opacity: 0;
-  animation: fadeUp 0.7s ease 0.56s forwards;
+  gap: var(--space-8);
+  padding-top: var(--space-8);
+  border-top: 1px solid var(--color-divider);
 }
 
 .stat {
   display: flex;
   flex-direction: column;
   gap: 2px;
-  padding: var(--space-3) var(--space-4);
-  border: 1px solid var(--color-border);
-  background: var(--color-bg-panel);
-  backdrop-filter: blur(var(--panel-blur));
-  -webkit-backdrop-filter: blur(var(--panel-blur));
-  box-shadow: var(--panel-shadow);
 }
 
 .statValue {
-  font-family: var(--font-mono);
-  font-weight: 500;
+  font-family: var(--font-display);
+  font-weight: 700;
   font-size: var(--fs-lg);
-  color: var(--color-hot);
+  color: var(--color-text-primary);
 }
 
 .statLabel {
@@ -133,80 +312,56 @@
   color: var(--color-text-tertiary);
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  white-space: nowrap;
 }
 
-.bio {
-  font-size: var(--fs-sm);
-  color: var(--color-text-tertiary);
-  max-width: 52ch;
-  margin-top: var(--space-6);
-  line-height: 1.6;
-  opacity: 0;
-  animation: fadeUp 0.7s ease 0.68s forwards;
-}
-
-.scrollCue {
-  display: flex;
-  align-items: center;
-  gap: var(--space-3);
+.skills {
   margin-top: var(--space-12);
+}
+
+.skillsLabel {
   font-family: var(--font-mono);
   font-size: var(--fs-xs);
   color: var(--color-text-tertiary);
-  letter-spacing: 0.06em;
   text-transform: uppercase;
-  opacity: 0;
-  animation: fadeUp 0.7s ease 0.8s forwards;
+  letter-spacing: 0.08em;
+  margin-bottom: var(--space-4);
 }
 
-.scrollLine {
-  width: 32px;
-  height: 1px;
-  background: var(--color-border-strong);
+.skillsRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
 }
 
-@keyframes fadeUp {
-  from {
-    opacity: 0;
-    transform: translateY(16px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.skillTag {
+  font-family: var(--font-mono);
+  font-size: var(--fs-sm);
+  color: var(--color-text-secondary);
+  border: 1px solid var(--color-divider);
+  padding: var(--space-2) var(--space-3);
 }
 
 @media (max-width: 900px) {
-  .inner {
+  .aboutGrid {
     grid-template-columns: 1fr;
+    gap: var(--space-8);
   }
 
-  .cardColumn {
-    order: -1;
-    justify-content: center;
-  }
-
-  .scrim {
-    background: radial-gradient(
-      ellipse 90% 70% at 50% 40%,
-      rgba(18, 14, 12, 0.85) 0%,
-      rgba(18, 14, 12, 0.55) 50%,
-      transparent 85%
-    );
+  .aboutText {
+    max-width: none;
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .eyebrow,
-  .name,
-  .roleLine,
-  .headline,
-  .statRow,
-  .bio,
-  .scrollCue {
-    animation: none;
-    opacity: 1;
-    transform: none;
+@media (max-width: 720px) {
+  .top {
+    flex-direction: column;
+  }
+
+  .roleWrap {
+    text-align: left;
+  }
+
+  .resumeTab {
+    display: none;
   }
 }

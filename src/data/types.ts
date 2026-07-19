@@ -1,56 +1,3 @@
-export interface Vec3 {
-  x: number;
-  y: number;
-  z: number;
-}
-
-export type MilestoneType =
-  | 'hero'
-  | 'education'
-  | 'internship'
-  | 'project'
-  | 'skills'
-  | 'coding-stats'
-  | 'certifications'
-  | 'contact';
-
-export interface Milestone {
-  id: string;
-  type: MilestoneType;
-  order: number;
-  title: string;
-  dateRange: string;
-  /** 0..1 progress window along the scroll track this milestone owns */
-  scrollRange: [number, number];
-  /** hand-authored spine control point */
-  anchor: Vec3;
-  /** decorative node count for this cluster */
-  density: number;
-  /** 0 = dim/early, 1 = bright/current */
-  brightness: number;
-  accentColor: string;
-  lookAtOverride?: Vec3;
-}
-
-export interface GraphNode {
-  id: string;
-  milestoneId: string;
-  position: Vec3;
-  color: string;
-  size: number;
-  brightness: number;
-}
-
-export interface GraphEdge {
-  a: GraphNode;
-  b: GraphNode;
-}
-
-export interface Graph {
-  nodes: GraphNode[];
-  edges: GraphEdge[];
-}
-
 export interface EducationEntry {
   institution: string;
   detail: string;
@@ -58,7 +5,6 @@ export interface EducationEntry {
   startDate: string;
   endDate: string;
   gpa?: string;
-  milestoneId: string;
 }
 
 export interface Internship {
@@ -70,7 +16,6 @@ export interface Internship {
   endDate: string;
   bullets: string[];
   tech: string[];
-  milestoneId: string;
   /** Optional — case study, write-up, or repo for this internship's work. */
   link?: string;
 }
@@ -85,8 +30,6 @@ export interface Project {
   bullets: string[];
   link?: string;
   repo?: string;
-  milestoneId: string;
-  geometryVariant: 'scholarsync' | 'bankms';
 }
 
 export type SkillCategory = 'languages' | 'frameworks' | 'ai-ml' | 'tools' | 'concepts';
@@ -115,7 +58,6 @@ export interface CodingStats {
   languages: CodingLanguageStat[];
   codolioUrl: string;
   leetcodeUrl?: string;
-  milestoneId: string;
 }
 
 export interface Certification {

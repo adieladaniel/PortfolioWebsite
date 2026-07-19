@@ -3,7 +3,6 @@ import type { CodingStats } from './types';
 export const codingStats: CodingStats = {
   totalSolved: 200,
   codolioUrl: 'https://codolio.com/profile/adieladaniel',
-  milestoneId: 'coding-stats',
   languages: [
     { name: 'C++', solved: 173 },
     { name: 'MySQL', solved: 75 },

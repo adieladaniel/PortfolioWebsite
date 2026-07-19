@@ -5,49 +5,152 @@
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: var(--color-amber);
+  background: var(--color-accent);
   pointer-events: none;
   z-index: 9999;
   will-change: transform;
   transform: translate(-50%, -50%);
 }
 
-.ring {
+/* Trailing HUD reticle — four corner brackets that lock tight around a
+   hovered [data-cursor] target instead of the cursor just growing into a
+   bigger circle. Positioned at (0,0) within a zero-size wrapper that itself
+   follows the smoothed trail position, each bracket offset from that
+   shared origin via its own transform. */
+.reticle {
   position: fixed;
   top: 0;
   left: 0;
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  border: 1px solid var(--color-border-strong);
+  width: 0;
+  height: 0;
   pointer-events: none;
   z-index: 9998;
-  will-change: transform, width, height;
-  transform: translate(-50%, -50%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: width 0.25s ease, height 0.25s ease, border-color 0.25s ease, background 0.25s ease;
+  will-change: transform;
 }
 
-.ring[data-hovering='true'] {
-  width: 64px;
-  height: 64px;
-  border-color: var(--color-amber);
-  background: rgba(224, 138, 62, 0.08);
+.bracket {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 6px;
+  height: 6px;
+  border: 1.5px solid rgba(var(--color-accent-rgb), 0.65);
+  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s ease;
+}
+
+.bracket[data-corner='tl'] {
+  border-right: none;
+  border-bottom: none;
+  transform: translate(-7px, -7px);
+}
+.bracket[data-corner='tr'] {
+  border-left: none;
+  border-bottom: none;
+  transform: translate(1px, -7px);
+}
+.bracket[data-corner='bl'] {
+  border-right: none;
+  border-top: none;
+  transform: translate(-7px, 1px);
+}
+.bracket[data-corner='br'] {
+  border-left: none;
+  border-top: none;
+  transform: translate(1px, 1px);
+}
+
+.reticle[data-hovering='true'] .bracket {
+  border-color: var(--color-accent);
+}
+.reticle[data-hovering='true'] .bracket[data-corner='tl'] {
+  transform: translate(-21px, -21px);
+}
+.reticle[data-hovering='true'] .bracket[data-corner='tr'] {
+  transform: translate(15px, -21px);
+}
+.reticle[data-hovering='true'] .bracket[data-corner='bl'] {
+  transform: translate(-21px, 15px);
+}
+.reticle[data-hovering='true'] .bracket[data-corner='br'] {
+  transform: translate(15px, 15px);
 }
 
 .label {
+  position: absolute;
+  top: 24px;
+  left: 50%;
+  transform: translateX(-50%);
   font-family: var(--font-mono);
   font-size: 9px;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--color-amber);
+  color: var(--color-accent);
   opacity: 0;
   transition: opacity 0.2s ease;
   white-space: nowrap;
 }
 
-.ring[data-hovering='true'] .label {
+.reticle[data-hovering='true'] .label {
   opacity: 1;
+}
+
+/* Spark trail + click ripple share this fixed, full-viewport layer so
+   particles position themselves with simple viewport coordinates. */
+.effectsLayer {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9997;
+  overflow: hidden;
+}
+
+.spark {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  box-shadow: 0 0 6px 1px rgba(var(--color-accent-rgb), 0.75);
+  animation: sparkFade 700ms ease-out forwards;
+}
+
+@keyframes sparkFade {
+  0% {
+    opacity: 0.9;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.2) translateY(14px);
+  }
+}
+
+.ripple {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 8px;
+  height: 8px;
+  border: 1.5px solid var(--color-accent);
+  border-radius: 50%;
+  animation: rippleExpand 600ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes rippleExpand {
+  0% {
+    opacity: 0.85;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(7);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bracket {
+    transition: none;
+  }
 }

@@ -2,12 +2,13 @@ import { useEffect, useRef, useState } from 'react';
 import styles from './SectionHeading.module.css';
 
 interface SectionHeadingProps {
-  index: string;
-  title: string;
-  dateRange?: string;
+  /** Plain-colored lead-in, e.g. "My" */
+  prefix: string;
+  /** Accent-colored payoff, e.g. "Education" */
+  accent: string;
 }
 
-/** Self-contained one-way reveal (own IntersectionObserver, doesn't rely on the parent Section) so the character stagger only plays once this heading is actually in view. */
+/** Self-contained one-way reveal (own IntersectionObserver) so the character stagger only plays once this heading is actually in view. */
 function useRevealed() {
   const ref = useRef<HTMLHeadingElement>(null);
   const [revealed, setRevealed] = useState(false);
@@ -38,29 +39,24 @@ function useRevealed() {
   return { ref, revealed };
 }
 
-export function SectionHeading({ index, title, dateRange }: SectionHeadingProps) {
+/** Two-tone "My Education" style heading — plain prefix, gradient-accent payoff, per-character stagger reveal across the whole thing. */
+export function SectionHeading({ prefix, accent }: SectionHeadingProps) {
   const { ref, revealed } = useRevealed();
+  const full = `${prefix} ${accent}`;
 
   return (
-    <>
-      <div className={styles.wrap}>
-        <span className={styles.index}>{index}</span>
-        <h2 ref={ref} className={styles.title}>
-          {title.split('').map((char, i) => (
-            <span
-              // eslint-disable-next-line react/no-array-index-key
-              key={i}
-              className={styles.char}
-              data-revealed={revealed}
-              style={{ transitionDelay: `${i * 18}ms` }}
-            >
-              {char === ' ' ? ' ' : char}
-            </span>
-          ))}
-        </h2>
-        {dateRange && <span className={styles.dateRange}>{dateRange}</span>}
-      </div>
-      <div className={styles.rule} />
-    </>
+    <h2 ref={ref} className={styles.title}>
+      {full.split('').map((char, i) => (
+        <span
+          // eslint-disable-next-line react/no-array-index-key
+          key={i}
+          className={i < prefix.length + 1 ? styles.prefixChar : styles.accentChar}
+          data-revealed={revealed}
+          style={{ transitionDelay: `${i * 18}ms` }}
+        >
+          {char === ' ' ? ' ' : char}
+        </span>
+      ))}
+    </h2>
   );
 }

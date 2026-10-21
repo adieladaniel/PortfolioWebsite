@@ -212,6 +212,7 @@ export function ProjectSection() {
                         {project.link && (
                           <a
                             className={styles.viewLink}
+                            data-liquid
                             data-cursor="open"
                             data-magnetic
                             href={project.link}
@@ -224,6 +225,7 @@ export function ProjectSection() {
                         {project.repo && (
                           <a
                             className={styles.viewLink}
+                            data-liquid
                             data-cursor="open"
                             data-magnetic
                             href={project.repo}

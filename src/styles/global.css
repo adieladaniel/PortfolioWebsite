@@ -54,6 +54,44 @@ button {
   cursor: pointer;
 }
 
+/* Liquid-fill buttons: any element with data-liquid floods with the accent
+   colour from the point where the pointer entered, and drains back out
+   toward the point where it left. LiquidButtons.tsx writes --mx and --my. */
+[data-liquid] {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  transition: color 0.35s ease, border-color 0.35s ease;
+}
+
+[data-liquid]::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--color-accent);
+  clip-path: circle(0% at var(--mx, 50%) var(--my, 50%));
+  transition: clip-path 0.55s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+[data-liquid]:hover,
+[data-liquid]:focus-visible {
+  color: var(--color-bg);
+  border-color: var(--color-accent);
+}
+
+[data-liquid]:hover::before,
+[data-liquid]:focus-visible::before {
+  clip-path: circle(150% at var(--mx, 50%) var(--my, 50%));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-liquid],
+  [data-liquid]::before {
+    transition: none;
+  }
+}
+
 ::selection {
   background: var(--color-accent);
   color: var(--color-bg);

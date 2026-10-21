@@ -1,3 +1,4 @@
+import { AskPortfolio } from '@/components/AskPortfolio';
 import { CopyEmailButton } from '@/components/CopyEmailButton';
 import { DecodeChars } from '@/components/DecodeChars';
 import { MagneticLink } from '@/components/MagneticLink';
@@ -53,6 +54,10 @@ export function ContactSection() {
             <br />
             something <span className={styles.accent}>together</span>
           </p>
+        </div>
+
+        <div className={styles.ask}>
+          <AskPortfolio />
         </div>
 
         <p className={styles.footer}>

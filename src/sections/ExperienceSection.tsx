@@ -43,6 +43,7 @@ export function ExperienceSection() {
               {intern.link && (
                 <a
                   className={styles.viewLink}
+                  data-liquid
                   data-cursor="open"
                   data-magnetic
                   href={intern.link}

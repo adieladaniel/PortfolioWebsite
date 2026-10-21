@@ -2,10 +2,10 @@ import { profile } from '@/data/profile';
 import { education } from '@/data/education';
 import { internships } from '@/data/internships';
 import { codingStats } from '@/data/codingStats';
-import { skills } from '@/data/skills';
 import { contact } from '@/data/contact';
 import { AttentionBio } from '@/components/AttentionBio';
 import { RoleTicker } from '@/components/RoleTicker';
+import { SkillsPlayground } from '@/components/SkillsPlayground';
 import { CountUpNumber } from '@/components/CountUpNumber';
 import { MagneticLink } from '@/components/MagneticLink';
 import { useScrollReveal } from '@/hooks/useScrollReveal';
@@ -118,18 +118,7 @@ export function HeroSection() {
           </div>
 
           <div className={styles.skills}>
-            <p className={styles.skillsLabel}>Skills</p>
-            <div className={styles.skillsRow}>
-              {skills.map((skill, i) => (
-                <span
-                  key={skill.name}
-                  className={styles.skillTag}
-                  style={{ transitionDelay: `${Math.min(i, 24) * 16}ms` }}
-                >
-                  {skill.name}
-                </span>
-              ))}
-            </div>
+            <SkillsPlayground />
           </div>
         </div>
       </div>

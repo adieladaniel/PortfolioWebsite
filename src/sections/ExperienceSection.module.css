@@ -205,12 +205,14 @@ section[data-revealed='true'] .row:nth-child(4) {
 
 .viewLink {
   align-self: flex-start;
+  padding: var(--space-2) var(--space-4);
   font-family: var(--font-mono);
   font-size: var(--fs-xs);
-  letter-spacing: 0.04em;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-decoration: none;
   color: var(--color-accent);
-  text-decoration: underline;
-  text-underline-offset: 3px;
+  border: 1px solid rgba(var(--color-accent-rgb), 0.5);
 }
 
 @media (max-width: 900px) {

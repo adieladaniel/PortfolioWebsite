@@ -107,6 +107,10 @@
   color: var(--color-accent);
 }
 
+.ask {
+  margin-top: var(--space-16);
+}
+
 .footer {
   margin-top: var(--space-24);
   font-family: var(--font-mono);

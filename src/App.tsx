@@ -1,5 +1,6 @@
 import { BackgroundField } from '@/components/BackgroundField';
 import { CustomCursor } from '@/components/CustomCursor';
+import { LiquidButtons } from '@/components/LiquidButtons';
 import { LoadingScreen } from '@/components/LoadingScreen';
 import { Nav } from '@/components/Nav';
 import { ScrollRail } from '@/components/ScrollRail';
@@ -16,6 +17,7 @@ function App() {
       <SmoothScroll />
       <BackgroundField />
       <CustomCursor />
+      <LiquidButtons />
       <LoadingScreen />
       <Nav />
       <ScrollRail />

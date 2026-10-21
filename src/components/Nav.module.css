@@ -78,6 +78,28 @@
   }
 
   .link {
-    font-size: 10px;
+    font-size: 11px;
+  }
+}
+
+/* Phones: the five links need the whole bar, so the wordmark steps aside and
+   the links spread across the full width. */
+@media (max-width: 560px) {
+  .nav {
+    padding: 0 var(--space-4);
+  }
+
+  .wordmark {
+    display: none;
+  }
+
+  .links {
+    width: 100%;
+    justify-content: space-between;
+    gap: 0;
+  }
+
+  .link {
+    letter-spacing: 0.04em;
   }
 }

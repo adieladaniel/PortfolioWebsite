@@ -22,7 +22,10 @@ export function Section({ id, children }: PropsWithChildren<SectionProps>) {
           }
         }
       },
-      { threshold: 0.15 },
+      // Reveal as soon as any part is inside the viewport (minus a bottom margin),
+      // not once a fraction of the section is: stacked on a phone, the projects
+      // section is taller than a screen and a fractional threshold never fires.
+      { threshold: 0, rootMargin: '0px 0px -12% 0px' },
     );
     observer.observe(el);
     return () => observer.disconnect();

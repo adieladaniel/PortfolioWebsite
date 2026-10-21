@@ -57,17 +57,22 @@ export function CopyEmailButton({ value }: { value: string }) {
     resetTimer.current = window.setTimeout(() => setCopied(false), COPIED_RESET_MS);
   };
 
+  // The burst layer is a sibling of the button, not a child: liquid buttons
+  // clip their contents, which would cut the sparks off.
   return (
-    <button
-      type="button"
-      className={styles.button}
-      data-cursor="copy"
-      data-magnetic
-      data-copied={copied}
-      onClick={handleClick}
-    >
+    <span className={styles.wrap}>
+      <button
+        type="button"
+        className={styles.button}
+        data-liquid
+        data-cursor="copy"
+        data-magnetic
+        data-copied={copied}
+        onClick={handleClick}
+      >
+        <span aria-live="polite">{copied ? 'copied ✓' : 'copy email'}</span>
+      </button>
       <span className={styles.burst} ref={burstRef} aria-hidden="true" />
-      <span aria-live="polite">{copied ? 'copied ✓' : 'copy email'}</span>
-    </button>
+    </span>
   );
 }

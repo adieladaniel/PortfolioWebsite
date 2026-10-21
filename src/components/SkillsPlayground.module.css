@@ -1,0 +1,89 @@
+.wrap {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
+
+.label {
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  color: var(--color-text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.hint {
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  letter-spacing: 0.04em;
+  color: var(--color-accent);
+}
+
+/* ---- plain list: touch, small screens, reduced motion ---- */
+
+.pit {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.chip {
+  font-family: var(--font-mono);
+  font-size: var(--fs-sm);
+  color: var(--color-text-secondary);
+  border: 1px solid var(--color-divider);
+  padding: var(--space-2) var(--space-3);
+  white-space: nowrap;
+}
+
+/* A faint tint by kind of skill, so the pile isn't one colour. */
+.chip[data-category='languages'] {
+  border-color: rgba(var(--color-accent-rgb), 0.5);
+}
+
+.chip[data-category='frameworks'] {
+  border-color: rgba(var(--color-signal-rgb), 0.45);
+}
+
+.chip[data-category='ai-ml'] {
+  border-color: rgba(var(--color-accent-rgb), 0.5);
+  color: var(--color-text-primary);
+}
+
+/* ---- physics pit ---- */
+
+.pit[data-physics='true'] {
+  display: block;
+  position: relative;
+  height: clamp(18rem, 38vh, 24rem);
+  overflow: hidden;
+  border: 1px solid var(--color-divider);
+  border-radius: 10px;
+  background: rgba(var(--color-bg-rgb), 0.4);
+  /* vertical panning stays native so the page still scrolls over the pit */
+  touch-action: pan-y;
+}
+
+.pit[data-physics='true'] .chip {
+  position: absolute;
+  left: 0;
+  top: 0;
+  border-radius: 999px;
+  background: rgba(var(--color-bg-rgb), 0.85);
+  cursor: grab;
+  user-select: none;
+  will-change: transform;
+  /* hidden until the pit scrolls into view and the chips start to fall */
+  opacity: 0;
+}
+
+.pit[data-physics='true'] .chip:active {
+  cursor: grabbing;
+}

@@ -440,7 +440,8 @@ export function ParticleField() {
       uniforms.uBall.value.set((ball.x - vw / 2) * pxToWorld, -(ball.y - vh / 2) * pxToWorld, 0);
       uniforms.uBallScale.value = ball.radius * pxToWorld;
       uniforms.uShapeW.value.set(ball.w0, ball.w1, ball.w2);
-      uniforms.uBallAlpha.value = ball.alpha;
+      // On narrow screens the ball often sits behind full-width text, so it steps back.
+      uniforms.uBallAlpha.value = vw < 900 ? ball.alpha * 0.55 : ball.alpha;
       uniforms.uPulse.value = reduced ? 0 : ball.pulse;
     }
 

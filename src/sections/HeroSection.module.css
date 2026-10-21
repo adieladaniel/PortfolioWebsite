@@ -216,22 +216,10 @@
   transition-delay: 0.22s;
 }
 
-.skillTag {
-  opacity: 0;
-  transform: translateY(10px);
-  transition: opacity 0.5s ease, transform 0.5s ease;
-}
-
-.about[data-revealed='true'] .skillTag {
-  opacity: 1;
-  transform: none;
-}
-
 @media (prefers-reduced-motion: reduce) {
   .aboutText,
   .statRow,
-  .skills,
-  .skillTag {
+  .skills {
     opacity: 1;
     transform: none;
     transition: none;
@@ -304,29 +292,6 @@
 
 .skills {
   margin-top: var(--space-12);
-}
-
-.skillsLabel {
-  font-family: var(--font-mono);
-  font-size: var(--fs-xs);
-  color: var(--color-text-tertiary);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  margin-bottom: var(--space-4);
-}
-
-.skillsRow {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-2);
-}
-
-.skillTag {
-  font-family: var(--font-mono);
-  font-size: var(--fs-sm);
-  color: var(--color-text-secondary);
-  border: 1px solid var(--color-divider);
-  padding: var(--space-2) var(--space-3);
 }
 
 @media (max-width: 900px) {

@@ -51,6 +51,7 @@ interface Anchor {
 const ANCHORS: Anchor[] = [
   { id: 'hero-stage', shape: [1, 0, 0], fit: 'min', k: 0.42, alpha: 1 },
   { id: 'ball-about', shape: [1, 0, 0], fit: 'min', k: 0.42, alpha: 0.85 },
+  { id: 'ball-build', shape: [1, 0, 0], fit: 'vh', k: 0.11, alpha: 0.55, at: [0.09, 0.8] },
   { id: 'ball-experience', shape: [0, 1, 0], fit: 'vh', k: 0.3, alpha: 0.7 },
   { id: 'ball-projects', shape: [0, 0, 1], fit: 'vh', k: 0.11, alpha: 0.85, at: [0.93, 0.13] },
   { id: 'ball-education', shape: [0, 0, 1], fit: 'vh', k: 0.11, alpha: 0.85, at: [0.93, 0.13] },

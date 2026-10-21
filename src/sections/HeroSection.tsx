@@ -11,9 +11,8 @@ import { RoleTicker } from '@/components/RoleTicker';
 import { SkillsPlayground } from '@/components/SkillsPlayground';
 import { CountUpNumber } from '@/components/CountUpNumber';
 import { MagneticLink } from '@/components/MagneticLink';
-import { GyroObject } from '@/components/hero/GyroObject';
 import { KnifeObject } from '@/components/hero/KnifeObject';
-import { pickHeroKind, type HeroObjectHandle } from '@/components/hero/types';
+import type { HeroObjectHandle } from '@/components/hero/types';
 import { useScrollReveal } from '@/hooks/useScrollReveal';
 import styles from './HeroSection.module.css';
 
@@ -38,7 +37,6 @@ export function HeroSection() {
   const about = useScrollReveal<HTMLDivElement>(0.15);
   const stageRef = useRef<HTMLDivElement>(null);
   const objectRef = useRef<HeroObjectHandle>(null);
-  const [kind] = useState(pickHeroKind);
   const [pinned, setPinned] = useState(() => window.matchMedia(PINNED_QUERY).matches);
 
   useEffect(() => {
@@ -98,7 +96,6 @@ export function HeroSection() {
         ref={stageRef}
         className={styles.stage}
         data-mode={pinned ? 'pinned' : 'static'}
-        data-object={kind}
       >
         <div className={styles.glow} aria-hidden="true" />
 
@@ -118,11 +115,7 @@ export function HeroSection() {
         </h1>
 
         <div className={styles.objectSlot}>
-          {kind === 'gyro' ? (
-            <GyroObject ref={objectRef} initial={pinned ? 0 : 1} />
-          ) : (
-            <KnifeObject ref={objectRef} initial={pinned ? 0 : 1} />
-          )}
+          <KnifeObject ref={objectRef} initial={pinned ? 0 : 1} />
         </div>
 
         <div className={styles.footer}>

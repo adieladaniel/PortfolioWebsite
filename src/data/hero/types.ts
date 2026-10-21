@@ -28,22 +28,6 @@ export interface KnifeGeometry {
   openOrder: string[];
 }
 
-export interface GyroRing {
-  name: string;
-  file: string;
-  /** Half the sprite's side: it is a square centred on the gyroscope's centre. */
-  half: number;
-  inner: number;
-  outer: number;
-}
-
-export interface GyroGeometry {
-  size: { w: number; h: number };
-  centre: { x: number; y: number };
-  /** Outer to inner. */
-  rings: GyroRing[];
-}
-
 export interface HeroLabel {
   name: string;
   note: string;

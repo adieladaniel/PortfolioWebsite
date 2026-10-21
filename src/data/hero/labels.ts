@@ -11,14 +11,3 @@ export const knifeLabels: Record<string, HeroLabel> = {
   R_awl: { name: 'APIs', note: 'FastAPI services' },
   R_small: { name: 'Deep learning', note: 'PyTorch, TensorFlow' },
 };
-
-/** What each gyroscope ring stands for: one part of an agent that can be trusted. */
-export const gyroLabels: Record<string, HeroLabel> = {
-  core: { name: 'Model', note: 'The reasoning core' },
-  steel: { name: 'Tools', note: 'What it can act on' },
-  knurled: { name: 'Planner', note: 'Breaks goals into steps' },
-  frosted: { name: 'Memory', note: 'What it remembers' },
-  copper: { name: 'Verifier', note: 'Checks its own work' },
-  obsidian: { name: 'Approvals', note: 'A human signs off' },
-  outer_frame: { name: 'Guardrails', note: 'Limits and safety' },
-};

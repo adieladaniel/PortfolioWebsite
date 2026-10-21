@@ -100,18 +100,13 @@
   color: var(--color-text-tertiary);
 }
 
-/* Phones: the labels would run off the screen, so the shapes speak for themselves.
-   The frame is sized so the object itself (not the empty label margins) fills the
-   width: the gyroscope is round and just grows; the knife is long, so it stands upright. */
+/* Phones: the labels would run off the screen, so the knife speaks for itself.
+   It is long, so it stands upright, sized so the knife itself (not the empty label
+   margins) fills the height. */
 @media (max-width: 719px) {
   .leaders,
   .tag {
     display: none;
-  }
-
-  .frame[data-kind='gyro'] {
-    width: calc(92vw * var(--fit));
-    flex: none;
   }
 
   .frame[data-kind='knife'] {

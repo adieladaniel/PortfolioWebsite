@@ -30,15 +30,35 @@
 
 .frame {
   display: grid;
-  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
   gap: var(--space-12);
   align-items: center;
 }
 
-.copy {
+.copy,
+.aside {
   display: flex;
   flex-direction: column;
   gap: var(--space-4);
+  min-width: 0;
+}
+
+/* The diagram gets the wider column and the tools and links sit under it,
+   which keeps the text column short enough to use a comfortable size. */
+.aside {
+  gap: var(--space-6);
+}
+
+/* Set by ProjectSection only in the fly-through, when a column is taller than
+   the pinned screen; otherwise these are no-ops. */
+.copy {
+  transform: scale(var(--fit-copy, 1));
+  transform-origin: left center;
+}
+
+.aside {
+  transform: scale(var(--fit-aside, 1));
+  transform-origin: left center;
 }
 
 .top {
@@ -173,8 +193,8 @@
 }
 
 .container[data-mode='flythrough'] .head h2 {
-  font-size: var(--fs-xl);
-  margin-bottom: var(--space-4);
+  font-size: clamp(1.75rem, 3vw, 2.5rem);
+  margin-bottom: var(--space-3);
 }
 
 .container[data-mode='flythrough'] .stage {
@@ -201,8 +221,25 @@
 }
 
 .container[data-mode='flythrough'] .bullets li {
-  font-size: 0.8125rem;
-  line-height: 1.55;
+  line-height: 1.5;
+}
+
+/* The pinned screen has a fixed height, so on shorter windows the text steps
+   down a notch rather than overflowing. */
+@media (max-height: 840px) {
+  .container[data-mode='flythrough'] .bullets li {
+    font-size: 0.9375rem;
+  }
+}
+
+@media (max-height: 760px) {
+  .container[data-mode='flythrough'] .bullets li {
+    font-size: 0.875rem;
+  }
+
+  .container[data-mode='flythrough'] .tagline {
+    font-size: var(--fs-base);
+  }
 }
 
 .index {

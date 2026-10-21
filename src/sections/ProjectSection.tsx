@@ -12,7 +12,7 @@ import styles from './ProjectSection.module.css';
 gsap.registerPlugin(ScrollTrigger);
 
 /** Wide, tall-enough screens that allow motion get the pinned fly-through; everything else gets a plain stacked list. */
-const FLYTHROUGH_QUERY = '(min-width: 900px) and (min-height: 600px) and (prefers-reduced-motion: no-preference)';
+const FLYTHROUGH_QUERY = '(min-width: 900px) and (min-height: 700px) and (prefers-reduced-motion: no-preference)';
 /** Viewport heights of scroll spent on each step from one project to the next. */
 const SCROLL_PER_STEP = 0.9;
 /** Share of each step spent holding still on a project before and after the move. */
@@ -67,6 +67,20 @@ export function ProjectSection() {
     let cancelled = false;
     let currentActive = -1;
 
+    // Each column shrinks just enough to fit the pinned screen when a
+    // project's text or diagram is taller than the room on short windows.
+    const measureFit = () => {
+      frames.forEach((el) => {
+        if (!el) return;
+        const room = el.clientHeight - 8;
+        [el.children[0], el.children[1]].forEach((column, k) => {
+          if (!(column instanceof HTMLElement)) return;
+          const fit = Math.min(1, room / column.scrollHeight);
+          el.style.setProperty(k === 0 ? '--fit-copy' : '--fit-aside', String(fit));
+        });
+      });
+    };
+
     const apply = (progress: number) => {
       const position = progress * (count - 1);
       frames.forEach((el, i) => {
@@ -97,8 +111,12 @@ export function ProjectSection() {
           pin: true,
           invalidateOnRefresh: true,
           onUpdate: (self) => apply(self.progress),
-          onRefresh: (self) => apply(self.progress),
+          onRefresh: (self) => {
+            measureFit();
+            apply(self.progress);
+          },
         });
+        measureFit();
         apply(triggerRef.current.progress);
         ScrollTrigger.refresh();
       });
@@ -113,6 +131,8 @@ export function ProjectSection() {
           el.style.opacity = '';
           el.style.visibility = '';
           el.style.transform = '';
+          el.style.removeProperty('--fit-copy');
+          el.style.removeProperty('--fit-aside');
         }
       });
     };
@@ -169,6 +189,18 @@ export function ProjectSection() {
                         <li key={bullet}>{bullet}</li>
                       ))}
                     </ul>
+                  </div>
+
+                  <div className={styles.aside}>
+                    {spec && (
+                      <div className={styles.diagram}>
+                        <PipelineDiagram
+                          spec={spec}
+                          active={!flythrough || i === active}
+                          label={`How ${project.name} works, as a flow diagram`}
+                        />
+                      </div>
+                    )}
 
                     <div className={styles.footer}>
                       <p className={styles.toolsLabel}>Tools and features</p>
@@ -204,16 +236,6 @@ export function ProjectSection() {
                       </div>
                     )}
                   </div>
-
-                  {spec && (
-                    <div className={styles.diagram}>
-                      <PipelineDiagram
-                        spec={spec}
-                        active={!flythrough || i === active}
-                        label={`How ${project.name} works, as a flow diagram`}
-                      />
-                    </div>
-                  )}
                 </article>
               );
             })}

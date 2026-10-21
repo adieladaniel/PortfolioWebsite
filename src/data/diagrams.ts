@@ -52,7 +52,7 @@ export const diagrams: Record<string, DiagramSpec> = {
       { from: 'task', to: 'plan' },
       { from: 'plan', to: 'act' },
       { from: 'act', to: 'gate', label: 'writes' },
-      { from: 'act', to: 'verify', label: 'claims success' },
+      { from: 'act', to: 'verify' },
       { from: 'verify', to: 'report', label: 'passed' },
       { from: 'verify', to: 'plan', label: 'audit failed', warn: true, fromSide: 'bottom', toSide: 'bottom', bulge: 70 },
     ],
@@ -140,9 +140,9 @@ export const diagrams: Record<string, DiagramSpec> = {
   scholarsync: {
     nodes: [
       { id: 'client', x: 10, y: 139, w: 110, label: 'Client', sub: 'branch / class' },
-      { id: 'api', x: 155, y: 139, w: 120, label: 'Express API', sub: 'REST + CRUD', kind: 'accent' },
-      { id: 'pool', x: 310, y: 139, w: 110, label: 'Pool', sub: 'connections' },
-      { id: 'db', x: 450, y: 139, w: 106, label: 'MySQL', sub: 'on Railway' },
+      { id: 'api', x: 170, y: 139, w: 120, label: 'Express API', sub: 'REST + CRUD', kind: 'accent' },
+      { id: 'pool', x: 330, y: 139, w: 110, label: 'Pool', sub: 'connections' },
+      { id: 'db', x: 470, y: 139, w: 86, label: 'MySQL', sub: 'on Railway' },
     ],
     edges: [
       { from: 'client', to: 'api', label: 'filters' },

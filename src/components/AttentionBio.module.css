@@ -60,11 +60,34 @@
   }
 }
 
+/* A pulsing dot and the accent colour so the hint reads as something to try,
+   not fine print. */
 .caption {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
   font-family: var(--font-mono);
-  font-size: var(--fs-xs);
-  letter-spacing: 0.04em;
-  color: var(--color-text-tertiary);
+  font-size: var(--fs-sm);
+  letter-spacing: 0.02em;
+  line-height: 1.4;
+  color: var(--color-accent);
+}
+
+.caption::before {
+  content: '';
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  box-shadow: 0 0 0 0 rgba(var(--color-accent-rgb), 0.6);
+  animation: hintPulse 2s ease-out infinite;
+}
+
+@keyframes hintPulse {
+  to {
+    box-shadow: 0 0 0 10px rgba(var(--color-accent-rgb), 0);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -75,5 +98,9 @@
   .arcs path {
     animation: none;
     stroke-dashoffset: 0;
+  }
+
+  .caption::before {
+    animation: none;
   }
 }

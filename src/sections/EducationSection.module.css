@@ -10,6 +10,12 @@
   gap: var(--space-4);
 }
 
+/* Certifications are short, so they take less room than a degree and the row is not
+   mostly certifications. */
+.slide[data-compact='true'] {
+  width: min(18rem, 76vw);
+}
+
 .slide:first-child {
   margin-left: 0;
   border-left: none;
@@ -64,8 +70,9 @@
    floating vertically centered in mostly-empty space. */
 .divider {
   flex: 0 0 auto;
-  width: min(11rem, 40vw);
-  padding: var(--space-8) var(--space-8) var(--space-8) var(--space-8);
+  /* as wide as its label, so "Certifications" is never cut off */
+  width: max-content;
+  padding: var(--space-8);
   margin-left: var(--space-8);
   border-left: 1px solid var(--color-divider);
   display: flex;
@@ -78,4 +85,5 @@
   font-size: var(--fs-lg);
   line-height: 1.25;
   color: var(--color-accent);
+  white-space: nowrap;
 }

@@ -34,9 +34,9 @@ const certRows: EduRow[] = certifications.map((cert) => ({
   dateRange: cert.date ?? '',
 }));
 
-function Slide({ row, index }: { row: EduRow; index: number }) {
+function Slide({ row, index, compact = false }: { row: EduRow; index: number; compact?: boolean }) {
   return (
-    <div className={styles.slide}>
+    <div className={styles.slide} data-compact={compact}>
       <span className={styles.number}>{String(index + 1).padStart(2, '0')}</span>
       <div className={styles.body}>
         <p className={styles.title}>{row.title}</p>
@@ -51,7 +51,14 @@ function Slide({ row, index }: { row: EduRow; index: number }) {
 export function EducationSection() {
   return (
     <Section id="education">
-      <HorizontalScrollPanel ballId="ball-education" heading={<SectionHeading prefix="My" accent="Education" />}>
+      {/* Slow and held: the row waits a moment on the degrees when you arrive, then crosses at
+          well under the page's speed, so the certifications are not what you see first. */}
+      <HorizontalScrollPanel
+        ballId="ball-education"
+        heading={<SectionHeading prefix="My" accent="Education" />}
+        pace={1.5}
+        hold={{ start: 0.5, end: 0.25 }}
+      >
         {eduRows.map((row, i) => (
           <Slide key={row.key} row={row} index={i} />
         ))}
@@ -61,7 +68,7 @@ export function EducationSection() {
         </div>
 
         {certRows.map((row, i) => (
-          <Slide key={row.key} row={row} index={i} />
+          <Slide key={row.key} row={row} index={i} compact />
         ))}
       </HorizontalScrollPanel>
     </Section>

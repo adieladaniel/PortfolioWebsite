@@ -18,6 +18,18 @@ interface HorizontalScrollPanelProps {
    * horizontal."
    */
   heading?: ReactNode;
+  /**
+   * Pixels of page scroll per pixel the row travels sideways. 1 moves the row as
+   * fast as the page scrolls; higher is slower and easier to follow, so a long
+   * row does not whip past on a flick of the wheel.
+   */
+  pace?: number;
+  /**
+   * Stretches of scroll, in viewport heights, where the row holds still before it
+   * starts moving and after it arrives. The first slides get a moment on screen
+   * when you arrive, and the last ones are not left the instant they appear.
+   */
+  hold?: { start?: number; end?: number };
   /** Id for an empty marker covering the container: the particle ball's anchor for this scene (see ParticleField's ANCHORS). */
   ballId?: string;
 }
@@ -34,7 +46,7 @@ interface HorizontalScrollPanelProps {
  * horizontal (so it doesn't need a second, different layout), just
  * user-driven rather than scroll-jacked.
  */
-export function HorizontalScrollPanel({ heading, ballId, children }: PropsWithChildren<HorizontalScrollPanelProps>) {
+export function HorizontalScrollPanel({ heading, ballId, pace = 1, hold, children }: PropsWithChildren<HorizontalScrollPanelProps>) {
   const containerRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
   const prefersReducedMotion = useReducedMotion();
@@ -90,18 +102,25 @@ export function HorizontalScrollPanel({ heading, ballId, children }: PropsWithCh
           // instead of only once it's been sitting there a while.
           const topMargin = Math.max(0, (window.innerHeight - container.getBoundingClientRect().height) / 2);
 
-          gsap.to(track, {
-            x: -distance,
-            ease: 'none',
+          // One timeline measured in pixels of scroll: hold, travel, hold. The
+          // scroll range is the timeline's whole length, so the row sits still
+          // through the holds and moves at 1/pace of the page's speed between them.
+          const holdStart = Math.round((hold?.start ?? 0) * window.innerHeight);
+          const holdEnd = Math.round((hold?.end ?? 0) * window.innerHeight);
+          const travel = Math.round(distance * pace);
+          const timeline = gsap.timeline({
+            defaults: { ease: 'none' },
             scrollTrigger: {
               trigger: container,
               start: `top ${topMargin}`,
-              end: `+=${distance}`,
+              end: `+=${holdStart + travel + holdEnd}`,
               scrub: 0.6,
               pin: true,
               invalidateOnRefresh: true,
             },
           });
+          timeline.to(track, { x: -distance, duration: travel }, holdStart);
+          if (holdEnd > 0) timeline.to({}, { duration: holdEnd }, holdStart + travel);
         }, container);
 
         // This page has two independent HorizontalScrollPanel instances
@@ -120,7 +139,7 @@ export function HorizontalScrollPanel({ heading, ballId, children }: PropsWithCh
       cancelled = true;
       ctx?.revert();
     };
-  }, [prefersReducedMotion]);
+  }, [prefersReducedMotion, pace, hold?.start, hold?.end]);
 
   return (
     <div ref={containerRef} className={styles.container}>

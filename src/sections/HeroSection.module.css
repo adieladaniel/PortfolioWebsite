@@ -7,6 +7,8 @@
 
 .stage {
   --p: 0;
+  --shift: 0;
+  --bio: 0;
   position: relative;
   z-index: 1;
   height: 100svh;
@@ -71,7 +73,7 @@
   position: relative;
   display: block;
   /* steps aside as the object opens, to leave room for the labels */
-  opacity: clamp(0.1, calc(1 - var(--p) * 1.7), 1);
+  opacity: calc(clamp(0.1, calc(1 - var(--p) * 1.7), 1) * (1 - var(--shift)));
 }
 
 .first {
@@ -131,6 +133,11 @@
 
 .roleWrap {
   text-align: left;
+}
+
+.roleWrap,
+.socials {
+  opacity: calc(1 - var(--shift));
 }
 
 .rolePrefix {
@@ -222,6 +229,114 @@
   border-color: var(--color-accent);
 }
 
+/* ---- the glide: the knife settles on the right edge, half off the screen, while the About text takes the left ---- */
+
+.objectSlot {
+  transform: translate3d(calc(var(--shift) * 29vw), 0, 0);
+}
+
+.bioPane {
+  position: absolute;
+  z-index: 2;
+  left: clamp(var(--space-4), 4vw, var(--space-12));
+  top: calc(var(--nav-height) + var(--space-4));
+  bottom: var(--space-6);
+  width: min(30rem, 37vw);
+  display: flex;
+  flex-direction: column;
+  justify-content: safe center;
+  gap: var(--space-6);
+  opacity: var(--bio);
+  /* the bio shares the screen with the card, so it sets a size or two smaller than it would alone */
+  --fs-lg: clamp(1.05rem, 1.5vw, 1.35rem);
+}
+
+/* nothing there to see or touch until the glide starts */
+.stage[data-about='false'] .bioPane {
+  visibility: hidden;
+}
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: var(--fs-sm);
+  color: var(--color-accent);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: var(--space-4);
+}
+
+/* One card, many faces: the one for the tool picked out fades in over the rest. */
+.toolCard {
+  position: relative;
+  min-height: 10.5rem;
+  padding: var(--space-4) var(--space-6) var(--space-8);
+  border-left: 2px solid var(--color-accent);
+  background: linear-gradient(90deg, rgba(var(--color-accent-rgb), 0.09), transparent 85%);
+}
+
+.toolFace {
+  position: absolute;
+  inset: var(--space-4) var(--space-6) var(--space-8);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 0.28s ease, transform 0.28s ease;
+  pointer-events: none;
+}
+
+.toolFace[data-on='true'] {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+
+.toolName {
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+}
+
+.toolProject {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--fs-md);
+  line-height: 1.15;
+  color: var(--color-text-primary);
+}
+
+.toolProof {
+  font-size: var(--fs-sm);
+  line-height: 1.45;
+  color: var(--color-text-secondary);
+}
+
+.toolDots {
+  position: absolute;
+  left: var(--space-6);
+  bottom: var(--space-3);
+  display: flex;
+  gap: 6px;
+}
+
+.toolDots span {
+  width: 18px;
+  height: 3px;
+  background: var(--color-divider);
+  transition: background 0.2s ease;
+}
+
+.toolDots span[data-on='true'] {
+  background: var(--color-accent);
+}
+
+.toolList {
+  display: none;
+}
+
 /* ---- static mode (reduced motion): the object sits open, the name reads above it ---- */
 
 .stage[data-mode='static'] {
@@ -270,6 +385,46 @@
   display: none;
 }
 
+.stage[data-mode='static'] .objectSlot {
+  transform: none;
+}
+
+.stage[data-mode='static'] .roleWrap,
+.stage[data-mode='static'] .socials {
+  opacity: 1;
+}
+
+.stage[data-mode='static'] .bioPane {
+  position: relative;
+  inset: auto;
+  width: auto;
+  max-width: 38rem;
+  margin: var(--space-12) clamp(var(--space-4), 4vw, var(--space-12)) 0;
+  opacity: 1;
+  visibility: visible;
+}
+
+.stage[data-mode='static'] .toolCard {
+  display: none;
+}
+
+.stage[data-mode='static'] .toolList {
+  display: grid;
+  gap: var(--space-6);
+  margin: var(--space-8) clamp(var(--space-4), 4vw, var(--space-12)) 0;
+  padding: 0;
+  list-style: none;
+  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+}
+
+.stage[data-mode='static'] .toolList li {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding-left: var(--space-4);
+  border-left: 2px solid var(--color-accent);
+}
+
 @media (prefers-reduced-motion: reduce) {
   .objectSlot,
   .footer,
@@ -293,17 +448,11 @@
   padding: var(--space-16) clamp(var(--space-6), 5vw, var(--space-16)) 0;
 }
 
-.aboutText,
 .statRow,
 .skills {
   opacity: 0;
   transform: translateY(24px);
   transition: opacity 0.7s ease, transform 0.7s ease;
-}
-
-.about[data-revealed='true'] .aboutText {
-  opacity: 1;
-  transform: none;
 }
 
 .about[data-revealed='true'] .statRow {
@@ -319,39 +468,12 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .aboutText,
   .statRow,
   .skills {
     opacity: 1;
     transform: none;
     transition: none;
   }
-}
-
-/* Two balanced columns, both inset within the section's own padding (never
-   pinned to the physical viewport edge) — About copy on the left, stats +
-   skills on the right, in the same row. */
-.aboutGrid {
-  display: grid;
-  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
-  gap: clamp(3rem, 6vw, 5rem);
-  align-items: start;
-}
-
-.aboutText {
-  max-width: 38rem;
-}
-
-.aboutSide {
-  display: flex;
-  flex-direction: column;
-  margin-top: var(--space-16);
-}
-
-/* Parking spot for the particle ball during this scene (see ParticleField's
-   ANCHORS) — it draws nothing itself. */
-.ballWindow {
-  min-height: 24rem;
 }
 
 .eyebrow {
@@ -396,17 +518,6 @@
   margin-top: var(--space-12);
 }
 
-@media (max-width: 900px) {
-  .aboutGrid {
-    grid-template-columns: 1fr;
-    gap: var(--space-8);
-  }
-
-  .aboutText {
-    max-width: none;
-  }
-}
-
 @media (max-width: 719px) {
   /* narrow screens: the two words stack above the object instead of flanking it */
   .stage[data-mode='pinned'] .name {
@@ -430,6 +541,23 @@
   .stage[data-mode='pinned'] .objectSlot {
     padding-top: 32svh;
     padding-bottom: 6rem;
+    transform: translate3d(calc(var(--shift) * 34vw), calc(var(--shift) * 8svh), 0);
+  }
+
+  /* behind the text, so it stays readable */
+  .stage[data-mode='pinned'] .objectSlot > div {
+    opacity: calc(1 - var(--shift) * 0.7);
+  }
+
+  .stage[data-mode='pinned'] .toolCard {
+    min-height: 13rem;
+  }
+
+  .stage[data-mode='pinned'] .bioPane {
+    width: auto;
+    right: var(--space-4);
+    justify-content: flex-start;
+    gap: var(--space-4);
   }
 
   .footer {

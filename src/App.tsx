@@ -6,7 +6,6 @@ import { Nav } from '@/components/Nav';
 import { ScrollRail } from '@/components/ScrollRail';
 import { SmoothScroll } from '@/components/SmoothScroll';
 import { HeroSection } from '@/sections/HeroSection';
-import { ChipSection } from '@/sections/ChipSection';
 import { ExperienceSection } from '@/sections/ExperienceSection';
 import { ProjectSection } from '@/sections/ProjectSection';
 import { EducationSection } from '@/sections/EducationSection';
@@ -24,7 +23,6 @@ function App() {
       <ScrollRail />
       <main>
         <HeroSection />
-        <ChipSection />
         <ExperienceSection />
         <ProjectSection />
         <EducationSection />

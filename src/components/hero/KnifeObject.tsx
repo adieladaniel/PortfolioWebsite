@@ -1,7 +1,7 @@
 import { forwardRef, useImperativeHandle, useRef, type CSSProperties } from 'react';
 import { knifeGeometry as G } from '@/data/hero/knifeGeometry';
 import { knifeLabels } from '@/data/hero/labels';
-import { clamp01, smooth, type HeroObjectHandle } from './types';
+import { clamp01, smooth, type HeroObjectHandle, type KnifeState } from './types';
 import styles from './HeroObject.module.css';
 
 /** Room each side of the knife for the labels, in source pixels. */
@@ -23,17 +23,18 @@ export const KnifeObject = forwardRef<HeroObjectHandle, { initial?: number }>(fu
   const frameRef = useRef<HTMLDivElement>(null);
   const toolRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
-  const apply = (progress: number) => {
-    const u = clamp01((progress - 0.05) / 0.62);
-    const labels = clamp01((progress - 0.72) / 0.24);
+  const apply = ({ open, labels, focus }: KnifeState) => {
     G.openOrder.forEach((name, rank) => {
       const el = toolRefs.current[name];
       const tool = G.tools[name];
       if (!el || !tool) return;
-      const e = smooth((u - rank * STAGGER) / (1 - (COUNT - 1) * STAGGER));
+      const e = smooth((clamp01(open) - rank * STAGGER) / (1 - (COUNT - 1) * STAGGER));
       el.style.transform = `rotate(${(tool.delta * (1 - e)).toFixed(2)}deg)`;
+      // with one tool picked out, the others step back
+      el.dataset.dim = focus !== null && focus !== name ? 'true' : 'false';
+      el.dataset.focus = focus === name ? 'true' : 'false';
     });
-    frameRef.current?.style.setProperty('--labels', labels.toFixed(3));
+    frameRef.current?.style.setProperty('--labels', clamp01(labels).toFixed(3));
   };
 
   useImperativeHandle(ref, () => ({ apply }));

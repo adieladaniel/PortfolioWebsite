@@ -12,7 +12,9 @@ import { SkillsPlayground } from '@/components/SkillsPlayground';
 import { CountUpNumber } from '@/components/CountUpNumber';
 import { MagneticLink } from '@/components/MagneticLink';
 import { KnifeObject } from '@/components/hero/KnifeObject';
-import type { HeroObjectHandle } from '@/components/hero/types';
+import { clamp01, smooth, type HeroObjectHandle } from '@/components/hero/types';
+import { knifeGeometry } from '@/data/hero/knifeGeometry';
+import { knifeLabels } from '@/data/hero/labels';
 import { useScrollReveal } from '@/hooks/useScrollReveal';
 import styles from './HeroSection.module.css';
 
@@ -20,8 +22,22 @@ gsap.registerPlugin(ScrollTrigger);
 
 /** The pinned, scroll-driven hero needs motion; with reduced motion the object simply sits open. */
 const PINNED_QUERY = '(prefers-reduced-motion: no-preference)';
-/** Viewport heights of scroll the object takes to open. */
-const SCROLL_LENGTH = 2.4;
+/**
+ * One pinned scene, in four beats, as fractions of its scroll: the knife opens
+ * and is labelled (hero), the labels and the name leave while the knife glides
+ * to the right edge, the About text comes in on the left, then the knife's tools
+ * are picked out one at a time, each with the project that proves it.
+ */
+const SCROLL_LENGTH = 5.6;
+const OPEN = { from: 0.012, to: 0.2 };
+const LABELS_IN = 0.19;
+const LABELS_OUT = 0.29;
+const GLIDE = { from: 0.31, to: 0.44 };
+const BIO_IN = { from: 0.37, to: 0.46 };
+const FOCUS_FROM = 0.47;
+/** Order the tools are picked out in: alternating left and right. */
+const FOCUS_ORDER = knifeGeometry.openOrder;
+const TOOL_COUNT = FOCUS_ORDER.length;
 
 const cgpaEntry = education.find((entry) => entry.gpa);
 const cgpaNumeric = parseFloat(cgpaEntry?.gpa?.split(' ')[0] ?? '0');
@@ -38,6 +54,9 @@ export function HeroSection() {
   const stageRef = useRef<HTMLDivElement>(null);
   const objectRef = useRef<HeroObjectHandle>(null);
   const [pinned, setPinned] = useState(() => window.matchMedia(PINNED_QUERY).matches);
+  /** Which tool is picked out in the card beside the About text (an index into FOCUS_ORDER), or -1. */
+  const [focus, setFocus] = useState(-1);
+  const focusRef = useRef(-1);
 
   useEffect(() => {
     const query = window.matchMedia(PINNED_QUERY);
@@ -51,7 +70,7 @@ export function HeroSection() {
     if (!stage) return;
 
     if (!pinned) {
-      objectRef.current?.apply(1);
+      objectRef.current?.apply({ open: 1, labels: 1, focus: null });
       stage.style.setProperty('--p', '1');
       return;
     }
@@ -59,8 +78,24 @@ export function HeroSection() {
     let cancelled = false;
     let trigger: ScrollTrigger | null = null;
     const apply = (progress: number) => {
-      objectRef.current?.apply(progress);
-      stage.style.setProperty('--p', progress.toFixed(3));
+      const labels = smooth((progress - LABELS_IN) / 0.05) * (1 - smooth((progress - LABELS_OUT) / 0.05));
+      const picked =
+        progress < FOCUS_FROM ? -1 : Math.min(TOOL_COUNT - 1, Math.floor(((progress - FOCUS_FROM) / (1 - FOCUS_FROM)) * TOOL_COUNT));
+      objectRef.current?.apply({
+        open: clamp01((progress - OPEN.from) / (OPEN.to - OPEN.from)),
+        labels,
+        focus: picked < 0 ? null : (FOCUS_ORDER[picked] ?? null),
+      });
+      // --p paces the name, the initial and the hint; --shift moves the knife; --bio brings the About text in
+      stage.style.setProperty('--p', clamp01(progress / 0.43).toFixed(3));
+      stage.style.setProperty('--shift', smooth((progress - GLIDE.from) / (GLIDE.to - GLIDE.from)).toFixed(3));
+      const bio = smooth((progress - BIO_IN.from) / (BIO_IN.to - BIO_IN.from));
+      stage.style.setProperty('--bio', bio.toFixed(3));
+      stage.dataset.about = bio > 0.02 ? 'true' : 'false';
+      if (picked !== focusRef.current) {
+        focusRef.current = picked;
+        setFocus(picked);
+      }
     };
 
     const fontsReady = document.fonts ? document.fonts.ready : Promise.resolve();
@@ -85,7 +120,7 @@ export function HeroSection() {
     return () => {
       cancelled = true;
       trigger?.kill();
-      stage.style.removeProperty('--p');
+      ['--p', '--shift', '--bio'].forEach((name) => stage.style.removeProperty(name));
     };
   }, [pinned]);
 
@@ -96,6 +131,7 @@ export function HeroSection() {
         ref={stageRef}
         className={styles.stage}
         data-mode={pinned ? 'pinned' : 'static'}
+        data-about="false"
       >
         <div className={styles.glow} aria-hidden="true" />
 
@@ -156,6 +192,50 @@ export function HeroSection() {
           </div>
         </div>
 
+        {/* The About text, which comes in on the left as the knife glides to the right. */}
+        <div className={styles.bioPane}>
+          <p className={styles.eyebrow}>About Me</p>
+          <AttentionBio text={profile.bio} />
+
+          <div className={styles.toolCard} data-active={focus >= 0} aria-live="polite">
+            <div className={styles.toolFace} data-on={focus < 0}>
+              <p className={styles.toolName}>The toolkit</p>
+              <p className={styles.toolProject}>Eight tools, eight projects</p>
+              <p className={styles.toolProof}>Keep scrolling: each tool is something I build with, next to the project that proves it.</p>
+            </div>
+            {FOCUS_ORDER.map((toolName, i) => {
+              const label = knifeLabels[toolName];
+              if (!label) return null;
+              return (
+                <div key={toolName} className={styles.toolFace} data-on={focus === i}>
+                  <p className={styles.toolName}>{label.name}</p>
+                  <p className={styles.toolProject}>{label.project}</p>
+                  <p className={styles.toolProof}>{label.proof}</p>
+                </div>
+              );
+            })}
+            <div className={styles.toolDots} aria-hidden="true">
+              {FOCUS_ORDER.map((toolName, i) => (
+                <span key={toolName} data-on={focus === i} />
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* With motion off the cards are a plain list under the text instead. */}
+        <ul className={styles.toolList}>
+          {FOCUS_ORDER.map((toolName) => {
+            const label = knifeLabels[toolName];
+            return label ? (
+              <li key={toolName}>
+                <span className={styles.toolName}>{label.name}</span>
+                <span className={styles.toolProject}>{label.project}</span>
+                <span className={styles.toolProof}>{label.proof}</span>
+              </li>
+            ) : null;
+          })}
+        </ul>
+
         <MagneticLink
           className={styles.resumeTab}
           data-cursor="download"
@@ -168,16 +248,6 @@ export function HeroSection() {
       </div>
 
       <div id="about-me" ref={about.ref} className={styles.about} data-revealed={about.revealed}>
-        <div className={styles.aboutGrid}>
-          <div className={styles.aboutText}>
-            <p className={styles.eyebrow}>About Me</p>
-            <AttentionBio text={profile.bio} />
-          </div>
-
-          {/* Empty on purpose: the particle ball parks here for this scene. */}
-          <div id="ball-about" className={styles.ballWindow} aria-hidden="true" />
-        </div>
-
         <div className={styles.aboutSide}>
           <div className={styles.statRow}>
             <div className={styles.stat}>

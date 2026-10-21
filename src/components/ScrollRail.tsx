@@ -6,7 +6,6 @@ import styles from './ScrollRail.module.css';
 const LAYERS = [
   { id: 'hero-stage', label: 'Intro' },
   { id: 'about-me', label: 'About' },
-  { id: 'chip', label: 'Under the hood' },
   { id: 'experience', label: 'Experience' },
   { id: 'projects', label: 'Projects' },
   { id: 'education', label: 'Education' },

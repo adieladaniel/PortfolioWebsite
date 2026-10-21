@@ -30,5 +30,9 @@ export interface KnifeGeometry {
 
 export interface HeroLabel {
   name: string;
+  /** Short caption beside the tool. */
   note: string;
+  /** The project that proves it, and what it did. */
+  project: string;
+  proof: string;
 }

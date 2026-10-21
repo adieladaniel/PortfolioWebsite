@@ -31,6 +31,16 @@
 .piece {
   position: absolute;
   will-change: transform;
+  transition: opacity 0.35s ease, filter 0.35s ease;
+}
+
+/* With one tool picked out, the others step back and it glows. */
+.piece[data-dim='true'] {
+  opacity: 0.3;
+}
+
+.piece[data-focus='true'] {
+  filter: drop-shadow(0 0 1.1rem rgba(var(--color-accent-rgb), 0.55));
 }
 
 .sprite {

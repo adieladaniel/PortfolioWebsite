@@ -3,6 +3,7 @@ import Lenis from 'lenis';
 import 'lenis/dist/lenis.css';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { setLenis } from '@/lib/lenis';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -26,6 +27,7 @@ export function SmoothScroll() {
       anchors: { offset: NAV_OFFSET },
     });
 
+    setLenis(lenis);
     lenis.on('scroll', ScrollTrigger.update);
     const tick = (time: number) => lenis.raf(time * 1000);
     gsap.ticker.add(tick);
@@ -34,6 +36,7 @@ export function SmoothScroll() {
     return () => {
       gsap.ticker.remove(tick);
       lenis.destroy();
+      setLenis(null);
     };
   }, []);
 

@@ -1,18 +1,44 @@
-.slide {
-  flex: 0 0 auto;
-  width: min(28rem, 85vw);
-  margin-left: var(--space-8);
-  padding-left: var(--space-8);
-  border-left: 1px solid var(--color-divider);
+.container {
+  position: relative;
+}
+
+/* The particle ball's anchor for this scene (see ParticleField's ANCHORS);
+   draws nothing. A small corner box normally, the whole pinned stage in the
+   fly-through so scene timing follows its centre. */
+.ballMarker {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 9rem;
+  height: 9rem;
+  pointer-events: none;
+}
+
+.container[data-mode='flythrough'] .ballMarker {
+  inset: 0;
+  width: auto;
+  height: auto;
+}
+
+/* ---- project frame (shared by both modes) ---- */
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-24);
+}
+
+.frame {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+  gap: var(--space-12);
+  align-items: center;
+}
+
+.copy {
   display: flex;
   flex-direction: column;
   gap: var(--space-4);
-}
-
-.slide:first-child {
-  margin-left: 0;
-  padding-left: 0;
-  border-left: none;
 }
 
 .top {
@@ -59,7 +85,7 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-2);
-  max-width: 40rem;
+  max-width: 42rem;
 }
 
 .bullets li {
@@ -111,4 +137,100 @@
   color: var(--color-accent);
   text-decoration: underline;
   text-underline-offset: 3px;
+}
+
+.diagram {
+  min-width: 0;
+}
+
+/* ---- stacked mode: small screens, short screens, reduced motion ---- */
+
+@media (max-width: 899px) {
+  .frame {
+    grid-template-columns: 1fr;
+    gap: var(--space-8);
+  }
+
+  /* the diagram's text needs a minimum width to stay legible */
+  .diagram {
+    overflow-x: auto;
+  }
+
+  .diagram > svg {
+    min-width: 30rem;
+  }
+}
+
+/* ---- fly-through mode: one pinned screen, projects approach and pass ---- */
+
+.container[data-mode='flythrough'] {
+  height: 100svh;
+  display: flex;
+  flex-direction: column;
+  padding-top: calc(var(--nav-height) + var(--space-2));
+  padding-bottom: var(--space-6);
+  overflow: hidden;
+}
+
+.container[data-mode='flythrough'] .head h2 {
+  font-size: var(--fs-xl);
+  margin-bottom: var(--space-4);
+}
+
+.container[data-mode='flythrough'] .stage {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+}
+
+.container[data-mode='flythrough'] .list {
+  display: block;
+  position: absolute;
+  inset: 0;
+}
+
+.container[data-mode='flythrough'] .frame {
+  position: absolute;
+  inset: 0;
+  transform-origin: 50% 45%;
+  will-change: transform, opacity;
+  /* the scroll handler sets these inline once it has measured; until then
+     nothing should flash */
+  opacity: 0;
+  visibility: hidden;
+}
+
+.container[data-mode='flythrough'] .bullets li {
+  font-size: 0.8125rem;
+  line-height: 1.55;
+}
+
+.index {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-6);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--color-divider);
+}
+
+.indexItem {
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-text-tertiary);
+  transition: color 0.25s ease;
+}
+
+.indexItem span {
+  color: var(--color-text-secondary);
+}
+
+.indexItem:hover {
+  color: var(--color-text-primary);
+}
+
+.indexItem[aria-current='true'],
+.indexItem[aria-current='true'] span {
+  color: var(--color-accent);
 }

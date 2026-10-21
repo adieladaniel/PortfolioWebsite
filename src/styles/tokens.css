@@ -8,6 +8,7 @@
 
   /* The one warm highlight: a few particles and "active" moments only. */
   --color-signal: #ffb454;
+  --color-signal-rgb: 255, 180, 84;
 
   /* Theme system: every accent-tinted thing on the site (headings, active
      nav state, glow blobs, box-shadows, borders) reads from these four

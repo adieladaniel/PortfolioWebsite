@@ -4,6 +4,7 @@ import { internships } from '@/data/internships';
 import { codingStats } from '@/data/codingStats';
 import { skills } from '@/data/skills';
 import { contact } from '@/data/contact';
+import { AttentionBio } from '@/components/AttentionBio';
 import { RoleTicker } from '@/components/RoleTicker';
 import { CountUpNumber } from '@/components/CountUpNumber';
 import { MagneticLink } from '@/components/MagneticLink';
@@ -83,7 +84,7 @@ export function HeroSection() {
         <div className={styles.aboutGrid}>
           <div className={styles.aboutText}>
             <p className={styles.eyebrow}>About Me</p>
-            <p className={styles.bio}>{profile.bio}</p>
+            <AttentionBio text={profile.bio} />
           </div>
 
           {/* Empty on purpose: the particle ball parks here for this scene. */}

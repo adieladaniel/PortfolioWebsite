@@ -273,14 +273,6 @@
   margin-bottom: var(--space-4);
 }
 
-.bio {
-  font-family: var(--font-display);
-  font-weight: 500;
-  font-size: var(--fs-lg);
-  line-height: 1.55;
-  color: var(--color-text-secondary);
-}
-
 .statRow {
   display: flex;
   flex-wrap: wrap;

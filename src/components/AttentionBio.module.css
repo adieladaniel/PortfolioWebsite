@@ -1,0 +1,79 @@
+.wrap {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.bio {
+  position: relative;
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: var(--fs-lg);
+  line-height: 1.55;
+  color: var(--color-text-secondary);
+}
+
+/* Each word reads its relatedness to the picked word from --w (0 to 1):
+   related words brighten toward the accent colour, unrelated ones dim. */
+.word {
+  display: inline-block;
+  transition: color 0.25s ease, opacity 0.25s ease;
+  cursor: default;
+}
+
+.word[data-active='true'] {
+  color: color-mix(in srgb, var(--color-accent) calc(var(--w) * 100%), var(--color-text-secondary));
+  opacity: calc(0.3 + var(--w) * 0.7);
+}
+
+.word[data-picked='true'] {
+  color: var(--color-text-primary);
+  opacity: 1;
+  text-decoration: underline;
+  text-decoration-color: var(--color-accent);
+  text-underline-offset: 0.2em;
+}
+
+.arcs {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.arcs path {
+  fill: none;
+  stroke: var(--color-accent);
+  stroke-width: 1.2;
+  stroke-linecap: round;
+  stroke-opacity: calc(var(--o) * 0.8);
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: drawArc 0.45s ease forwards;
+}
+
+@keyframes drawArc {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.caption {
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  letter-spacing: 0.04em;
+  color: var(--color-text-tertiary);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .word {
+    transition: none;
+  }
+
+  .arcs path {
+    animation: none;
+    stroke-dashoffset: 0;
+  }
+}

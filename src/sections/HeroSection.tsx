@@ -198,6 +198,11 @@ export function HeroSection() {
           <AttentionBio text={profile.bio} />
 
           <div className={styles.toolCard} data-active={focus >= 0} aria-live="polite">
+            {/* Re-mounted on every change (the key), so the sweep and glow play again each time the tool changes. */}
+            {focus >= 0 && <span key={focus} className={styles.flash} aria-hidden="true" />}
+            <p className={styles.toolCount} aria-hidden="true" data-on={focus >= 0}>
+              {String(Math.max(focus, 0) + 1).padStart(2, '0')} / {String(TOOL_COUNT).padStart(2, '0')}
+            </p>
             <div className={styles.toolFace} data-on={focus < 0}>
               <p className={styles.toolName}>The toolkit</p>
               <p className={styles.toolProject}>Eight tools, eight projects</p>

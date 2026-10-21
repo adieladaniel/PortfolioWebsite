@@ -11,6 +11,7 @@
  *  - group 1 is the background cloud: fixed to the viewport with a slow
  *    scroll parallax, never part of the ball.
  * `uAssemble` plays the intro, flying every particle in from far away.
+ * `uPulse` makes the ball beat like a heart (used in the Contact scene).
  */
 const FIELD_COMMON = /* glsl */ `
 uniform float uTime;
@@ -19,6 +20,7 @@ uniform float uSpin;
 uniform float uBallScale;
 uniform float uBallAlpha;
 uniform float uCloudScroll;
+uniform float uPulse;
 uniform vec3 uBall;
 uniform vec3 uShapeW;
 uniform vec2 uCloudHalf;
@@ -31,11 +33,16 @@ attribute vec3 aCloud;
 attribute float aSeed;
 attribute float aGroup;
 
+/* One heartbeat per cycle: near 0 most of the time, spiking to 1. */
+float heartbeat() {
+  return pow(max(0.0, sin(uTime * 2.6)), 12.0);
+}
+
 vec3 fieldPos() {
   vec3 f = aShape0 * uShapeW.x + aShape1 * uShapeW.y + aShape2 * uShapeW.z;
   float a = uTime * 0.12 * uSpin;
   f.xz = mat2(cos(a), -sin(a), sin(a), cos(a)) * f.xz;
-  f = f * uBallScale + uBall;
+  f = f * uBallScale * (1.0 + uPulse * 0.14 * heartbeat()) + uBall;
   f += vec3(
     sin(uTime * 0.5 + aSeed * 20.0),
     cos(uTime * 0.45 + aSeed * 31.0),
@@ -74,7 +81,7 @@ void main() {
   vec4 mv = modelViewMatrix * vec4(p, 1.0);
   gl_Position = projectionMatrix * mv;
   gl_PointSize = aSize * uPx * (18.0 / -mv.z);
-  vAlpha = mix(uBallAlpha, 0.38, aGroup);
+  vAlpha = mix(uBallAlpha * (1.0 + uPulse * 0.7 * heartbeat()), 0.38, aGroup);
   vWarm = aWarm;
 }
 `;

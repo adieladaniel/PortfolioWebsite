@@ -1,3 +1,5 @@
+import { CopyEmailButton } from '@/components/CopyEmailButton';
+import { DecodeChars } from '@/components/DecodeChars';
 import { MagneticLink } from '@/components/MagneticLink';
 import { contact } from '@/data/contact';
 import { profile } from '@/data/profile';
@@ -11,7 +13,9 @@ export function ContactSection() {
     <section id="contact" className={styles.contact}>
       <div ref={reveal.ref} className={styles.inner} data-revealed={reveal.revealed}>
         <div id="ball-contact" className={styles.ballMarker} aria-hidden="true" />
-        <h2 className={styles.heading}>Contact</h2>
+        <h2 className={styles.heading} aria-label="Contact">
+          <DecodeChars text="Contact" revealed={reveal.revealed} />
+        </h2>
 
         <div className={styles.grid}>
           <div className={styles.column}>
@@ -19,6 +23,7 @@ export function ContactSection() {
             <MagneticLink className={styles.value} data-cursor="email" href={`mailto:${contact.email}`}>
               {contact.email}
             </MagneticLink>
+            <CopyEmailButton value={contact.email} />
           </div>
 
           <div className={styles.column}>

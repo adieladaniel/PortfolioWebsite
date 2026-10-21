@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { DecodeChars } from './DecodeChars';
 import styles from './SectionHeading.module.css';
 
 interface SectionHeadingProps {
@@ -8,7 +9,7 @@ interface SectionHeadingProps {
   accent: string;
 }
 
-/** Self-contained one-way reveal (own IntersectionObserver) so the character stagger only plays once this heading is actually in view. */
+/** Self-contained one-way reveal (own IntersectionObserver) so the decode only plays once this heading is actually in view. */
 function useRevealed() {
   const ref = useRef<HTMLHeadingElement>(null);
   const [revealed, setRevealed] = useState(false);
@@ -39,24 +40,19 @@ function useRevealed() {
   return { ref, revealed };
 }
 
-/** Two-tone "My Education" style heading — plain prefix, gradient-accent payoff, per-character stagger reveal across the whole thing. */
+/** Two-tone "My Education" style heading: plain prefix, accent payoff, each letter decoding out of random glyphs as it enters. */
 export function SectionHeading({ prefix, accent }: SectionHeadingProps) {
   const { ref, revealed } = useRevealed();
   const full = `${prefix} ${accent}`;
 
   return (
-    <h2 ref={ref} className={styles.title}>
-      {full.split('').map((char, i) => (
-        <span
-          // eslint-disable-next-line react/no-array-index-key
-          key={i}
-          className={i < prefix.length + 1 ? styles.prefixChar : styles.accentChar}
-          data-revealed={revealed}
-          style={{ transitionDelay: `${i * 18}ms` }}
-        >
-          {char === ' ' ? ' ' : char}
-        </span>
-      ))}
+    <h2 ref={ref} className={styles.title} aria-label={full}>
+      <DecodeChars
+        text={full}
+        revealed={revealed}
+        charClass={(i) => (i < prefix.length + 1 ? styles.prefixChar : styles.accentChar)}
+        charStyle={(i) => ({ transitionDelay: `${i * 18}ms` })}
+      />
     </h2>
   );
 }

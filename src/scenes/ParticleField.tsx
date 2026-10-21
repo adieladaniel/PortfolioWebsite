@@ -37,6 +37,8 @@ interface Anchor {
   fit: 'min' | 'vh';
   k: number;
   alpha: number;
+  /** 0 to 1: how strongly the ball beats like a heart in this scene. */
+  pulse?: number;
   /**
    * Where inside the anchor's box the ball stands, as [x, y] fractions from
    * its top-left. Defaults to the centre. Which anchor the ball is "at"
@@ -52,7 +54,7 @@ const ANCHORS: Anchor[] = [
   { id: 'ball-experience', shape: [0, 1, 0], fit: 'vh', k: 0.3, alpha: 0.7 },
   { id: 'ball-projects', shape: [0, 0, 1], fit: 'vh', k: 0.11, alpha: 0.85, at: [0.93, 0.13] },
   { id: 'ball-education', shape: [0, 0, 1], fit: 'vh', k: 0.11, alpha: 0.85, at: [0.93, 0.13] },
-  { id: 'ball-contact', shape: [1, 0, 0], fit: 'min', k: 0.42, alpha: 1 },
+  { id: 'ball-contact', shape: [1, 0, 0], fit: 'min', k: 0.34, alpha: 1, pulse: 1 },
 ];
 
 interface AnchorSample {
@@ -64,6 +66,7 @@ interface AnchorSample {
   radius: number;
   shape: [number, number, number];
   alpha: number;
+  pulse: number;
 }
 
 interface BallState {
@@ -74,6 +77,7 @@ interface BallState {
   w1: number;
   w2: number;
   alpha: number;
+  pulse: number;
 }
 
 interface FieldGeometry {
@@ -281,6 +285,7 @@ function targetBall(samples: AnchorSample[], mid: number): BallState | null {
     w1: MathUtils.lerp(a.shape[1], b.shape[1], e),
     w2: MathUtils.lerp(a.shape[2], b.shape[2], e),
     alpha: MathUtils.lerp(a.alpha, b.alpha, e),
+    pulse: MathUtils.lerp(a.pulse, b.pulse, e),
   };
 }
 
@@ -305,6 +310,7 @@ export function ParticleField() {
       uBallScale: { value: 1 },
       uBallAlpha: { value: 1 },
       uCloudScroll: { value: 0 },
+      uPulse: { value: 0 },
       uPx: { value: 1 },
       uBall: { value: new Vector3() },
       uShapeW: { value: new Vector3(1, 0, 0) },
@@ -408,6 +414,7 @@ export function ParticleField() {
         radius: (anchor.fit === 'vh' ? vh : Math.min(rect.width, rect.height)) * anchor.k,
         shape: anchor.shape,
         alpha: anchor.alpha,
+        pulse: anchor.pulse ?? 0,
       });
     });
 
@@ -426,6 +433,7 @@ export function ParticleField() {
           w1: MathUtils.damp(cur.w1, target.w1, rate, dt),
           w2: MathUtils.damp(cur.w2, target.w2, rate, dt),
           alpha: MathUtils.damp(cur.alpha, target.alpha, rate, dt),
+          pulse: MathUtils.damp(cur.pulse, target.pulse, rate, dt),
         };
       }
       const ball = s.ball;
@@ -433,6 +441,7 @@ export function ParticleField() {
       uniforms.uBallScale.value = ball.radius * pxToWorld;
       uniforms.uShapeW.value.set(ball.w0, ball.w1, ball.w2);
       uniforms.uBallAlpha.value = ball.alpha;
+      uniforms.uPulse.value = reduced ? 0 : ball.pulse;
     }
 
     uniforms.uCloudHalf.value.set(((worldH * vw) / vh / 2) * 1.05, (worldH / 2) * 1.05);

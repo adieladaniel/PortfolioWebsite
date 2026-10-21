@@ -1,0 +1,12 @@
+.char {
+  display: inline-block;
+  text-align: center;
+  white-space: pre;
+}
+
+/* While a letter is still scrambling it reads as unresolved: dimmer and
+   accent-tinted. Beats the colour classes the parent passes in. */
+.char[data-scrambling='true'] {
+  color: var(--color-accent);
+  opacity: 0.75;
+}

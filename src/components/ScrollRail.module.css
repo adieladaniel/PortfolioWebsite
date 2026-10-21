@@ -1,0 +1,92 @@
+.rail {
+  position: fixed;
+  right: var(--space-4);
+  top: 50%;
+  z-index: 30;
+  width: 44px;
+  aspect-ratio: 44 / 300;
+  height: min(46vh, 340px);
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+/* --g (0 to 1) is how much activation is crossing this gap right now. */
+.gap line {
+  stroke: var(--color-accent);
+  stroke-width: 0.6;
+  stroke-opacity: calc(0.1 + var(--g, 0) * 0.65);
+}
+
+/* --a (0 to 1) is how strongly this layer is the current scene. */
+.layer circle {
+  fill: var(--color-accent);
+  fill-opacity: calc(0.25 + var(--a, 0) * 0.75);
+  transform-box: fill-box;
+  transform-origin: center;
+  transform: scale(calc(1 + var(--a, 0) * 0.9));
+  filter: drop-shadow(0 0 calc(var(--a, 0) * 4px) rgba(var(--color-accent-rgb), 0.9));
+}
+
+/* One transparent button per layer, sitting over it. */
+.hit {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 28px;
+  transform: translateY(-50%);
+  pointer-events: auto;
+  border-radius: 6px;
+}
+
+.hit:focus-visible {
+  outline: 1px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+/* The label sits to the left of the rail and shows on hover or focus only,
+   so it never sits on top of page text. The current scene shows as the lit
+   layer, and its label is accent-coloured when you do hover it. */
+.label {
+  position: absolute;
+  right: calc(100% + var(--space-3));
+  top: 50%;
+  transform: translateY(-50%) translateX(6px);
+  white-space: nowrap;
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.hit[data-active='true'] .label {
+  color: var(--color-accent);
+}
+
+.hit:hover .label,
+.hit:focus-visible .label {
+  opacity: 1;
+  transform: translateY(-50%);
+}
+
+@media (max-width: 1000px), (max-height: 520px) {
+  .rail {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .label {
+    transition: none;
+  }
+}

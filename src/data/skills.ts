@@ -9,6 +9,8 @@ export const skills: Skill[] = [
   { name: 'JavaScript', category: 'languages' },
   { name: 'MySQL', category: 'languages' },
   { name: 'PostgreSQL', category: 'languages' },
+  { name: 'TypeScript', category: 'languages' },
+  { name: 'DuckDB', category: 'languages' },
 
   // Frameworks & libraries
   { name: 'React', category: 'frameworks' },
@@ -20,6 +22,12 @@ export const skills: Skill[] = [
   { name: 'Matplotlib', category: 'frameworks' },
   { name: 'Scikit-learn', category: 'frameworks' },
   { name: 'TensorFlow', category: 'frameworks' },
+  { name: 'PyTorch', category: 'frameworks' },
+  { name: 'spaCy', category: 'frameworks' },
+  { name: 'XGBoost', category: 'frameworks' },
+  { name: 'SQLAlchemy', category: 'frameworks' },
+  { name: 'Playwright', category: 'frameworks' },
+  { name: 'Streamlit', category: 'frameworks' },
 
   // AI/ML
   { name: 'Machine Learning', category: 'ai-ml' },
@@ -29,6 +37,11 @@ export const skills: Skill[] = [
   { name: 'LLM', category: 'ai-ml' },
   { name: 'RAG', category: 'ai-ml' },
   { name: 'Generative AI', category: 'ai-ml' },
+  { name: 'NLP', category: 'ai-ml' },
+  { name: 'LangGraph', category: 'ai-ml' },
+  { name: 'LangChain', category: 'ai-ml' },
+  { name: 'ChromaDB', category: 'ai-ml' },
+  { name: 'Qdrant', category: 'ai-ml' },
 
   // Developer tools
   { name: 'Git', category: 'tools' },
@@ -37,6 +50,12 @@ export const skills: Skill[] = [
   { name: 'VS Code', category: 'tools' },
   { name: 'NetBeans', category: 'tools' },
   { name: 'Power BI', category: 'tools' },
+  { name: 'Tableau', category: 'tools' },
+  { name: 'Excel', category: 'tools' },
+  { name: 'Claude Code', category: 'tools' },
+  { name: 'Hugging Face', category: 'tools' },
+  { name: 'Jupyter / Colab', category: 'tools' },
+  { name: 'Postman', category: 'tools' },
 
   // Concepts
   { name: 'Data Structures & Algorithms', category: 'concepts' },
@@ -44,4 +63,7 @@ export const skills: Skill[] = [
   { name: 'OOP', category: 'concepts' },
   { name: 'DBMS', category: 'concepts' },
   { name: 'Operating Systems', category: 'concepts' },
+  { name: 'MLOps', category: 'concepts' },
+  { name: 'Regression', category: 'concepts' },
+  { name: 'Prompt Engineering', category: 'concepts' },
 ];

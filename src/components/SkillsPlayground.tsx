@@ -6,7 +6,7 @@ import styles from './SkillsPlayground.module.css';
 const { Engine, Bodies, Composite, Mouse, MouseConstraint } = Matter;
 
 /** Physics only where a mouse can drag and motion is welcome; everyone else gets the plain wrapped list. */
-const PHYSICS_QUERY = '(pointer: fine) and (min-width: 700px) and (prefers-reduced-motion: no-preference)';
+const PHYSICS_QUERY = '(pointer: fine) and (min-width: 900px) and (prefers-reduced-motion: no-preference)';
 const WALL = 80;
 const STEP_MS = 1000 / 60;
 const START_VISIBILITY = 0.35;

@@ -7,8 +7,8 @@ export const projects: Project[] = [
     name: 'OneForAll Agent',
     tagline: 'Task-agnostic AI agent that does business work in real systems, asks a human before it changes anything, and proves the result.',
     tech: ['Python', 'FastAPI', 'PostgreSQL', 'Playwright', 'Gemini', 'Cloud Run'],
-    startDate: 'Oct 2026',
-    endDate: 'Present',
+    startDate: 'May 2026',
+    endDate: 'Sep 2026',
     bullets: [
       'Built the agent runtime without any agent framework: it plans, drives a real Chromium browser, files and HTTP, and rebuilds its prompt from stored state every turn instead of carrying a growing chat history.',
       'Enforced safety in code, not in the prompt: risk is classified outside the model, writes pause for a human approval, and an independent read-only verifier re-checks the real systems before a run can count as succeeded.',

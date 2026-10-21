@@ -10,11 +10,11 @@ export const internships: Internship[] = [
     startDate: 'Apr 2026',
     endDate: 'May 2026',
     bullets: [
-      'Built an AI-powered finance analytics platform integrating Power BI dashboards with a hybrid rule-based and LLM-driven conversational chatbot for natural language analytics.',
-      'Designed and tested 10+ scalable FastAPI endpoints and JSON-based data pipelines processing 50,000+ student fee records across collections, concessions, waivers, and pending fees.',
-      'Implemented intelligent query planning, context-aware follow-up handling, and automated chart generation, cutting manual reporting effort by 80% across a multi-tenant deployment spanning 20+ schools.',
+      'Developed an AI-powered finance analytics platform for a multi-tenant enterprise deployment, integrating Power BI dashboards with the chatbot, architected as a LangGraph state-machine pipeline with conditional rule-based/LLM-fallback routing to balance reliability and flexibility in a live business system.',
+      'Designed and tested 10+ scalable FastAPI endpoints (validated via Postman) and JSON-based data pipelines to process 50,000+ student fee records, enabling dynamic queries across business-critical processes including collections, concessions, waivers, and pending fees.',
+      'Implemented intelligent query planning with LangChain structured LLM output, a deterministic RapidFuzz-based typo-correction layer, and context-aware follow-up handling, reducing manual reporting effort by 80% across a multi-tenant deployment spanning 20+ client organizations in India.',
     ],
-    tech: ['Python', 'FastAPI', 'Power BI', 'LLM', 'RAG', 'JSON pipelines'],
+    tech: ['Python', 'FastAPI', 'LangGraph', 'LangChain', 'RapidFuzz', 'Power BI', 'Postman'],
     link: 'https://github.com/adieladaniel/FinnBot-Financial-AI-Analytics-Engine',
   },
   {
@@ -23,7 +23,7 @@ export const internships: Internship[] = [
     role: 'Artificial Intelligence Intern — OncoVision, Early Cancer Detection',
     location: 'Bengaluru, India',
     startDate: 'Apr 2025',
-    endDate: 'Aug 2025',
+    endDate: 'Jul 2025',
     bullets: [
       'Developed a dual-output deep learning model using EfficientNetB0 to classify eight cancer types and detect malignancy from histopathological images.',
       'Achieved 97.99% accuracy in cancer classification and 98.13% in malignancy detection through transfer learning, regularization, and two-phase training.',

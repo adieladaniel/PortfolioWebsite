@@ -8,7 +8,7 @@ export const education: EducationEntry[] = [
     location: 'Bengaluru, Karnataka',
     startDate: 'Jul 2023',
     endDate: 'Apr 2027 (Expected)',
-    gpa: '8.5 / 10.0 CGPA',
+    gpa: '8.4 / 10.0 CGPA',
   },
   {
     institution: "St. George's School",

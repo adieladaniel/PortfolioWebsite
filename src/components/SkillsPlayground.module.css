@@ -62,7 +62,7 @@
 .pit[data-physics='true'] {
   display: block;
   position: relative;
-  height: clamp(18rem, 38vh, 24rem);
+  height: clamp(22rem, 46vh, 30rem);
   overflow: hidden;
   border: 1px solid var(--color-divider);
   border-radius: 10px;

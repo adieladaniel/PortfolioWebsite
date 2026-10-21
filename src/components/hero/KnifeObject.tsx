@@ -82,6 +82,15 @@ export const KnifeObject = forwardRef<HeroObjectHandle, { initial?: number }>(fu
         <img src="/hero/knife/body.webp" alt="" draggable={false} className={styles.sprite} />
       </div>
 
+      {/* The middle initial of the name, stamped on the handle: it is the "A" in Adiel A Daniel, and goes as the name does. */}
+      <span
+        className={styles.initial}
+        style={{ left: pct(G.body.x + G.body.w / 2 + PAD_X, FRAME.w), top: pct(G.body.y + G.body.h / 2, FRAME.h) }}
+        aria-hidden="true"
+      >
+        A
+      </span>
+
       <svg className={styles.leaders} viewBox={`0 0 ${FRAME.w} ${FRAME.h}`} aria-hidden="true">
         {ordered.map((t, i) => {
           const isLeft = t.name.startsWith('L_');

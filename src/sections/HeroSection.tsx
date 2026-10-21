@@ -32,6 +32,7 @@ const gradYear = gradYearMatch?.[0] ?? '—';
 const nameParts = profile.name.split(' ');
 const firstName = nameParts[0] ?? profile.name;
 const lastName = nameParts[nameParts.length - 1] ?? '';
+const middleInitial = nameParts.length > 2 ? (nameParts[1] ?? '') : '';
 
 export function HeroSection() {
   const about = useScrollReveal<HTMLDivElement>(0.15);
@@ -106,6 +107,10 @@ export function HeroSection() {
           <span className={styles.first} aria-hidden="true">
             <span className={styles.hello}>Hello! I&apos;m</span>
             {firstName}
+          </span>
+          {/* Only shown when the knife is not (reduced motion): otherwise the A sits on the knife's handle. */}
+          <span className={styles.mid} aria-hidden="true">
+            {middleInitial}
           </span>
           <span className={styles.last} aria-hidden="true">
             {lastName}

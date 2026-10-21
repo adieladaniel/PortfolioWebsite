@@ -82,6 +82,10 @@
   transform: translateX(calc(var(--p) * 7vw));
 }
 
+.mid {
+  display: none;
+}
+
 .hello {
   position: absolute;
   left: 0.08em;
@@ -236,6 +240,11 @@
   flex-wrap: wrap;
   gap: 0 0.28em;
   font-size: clamp(3rem, 8vw, 8rem);
+}
+
+.stage[data-mode='static'] .mid {
+  display: block;
+  opacity: 1;
 }
 
 .stage[data-mode='static'] .first,

@@ -7,6 +7,27 @@
   aspect-ratio: var(--ar);
 }
 
+/* sized in units of the frame's own width, so the initial scales with the knife */
+.frame[data-kind='knife'] {
+  container-type: inline-size;
+}
+
+/* White initial stamped on the handle. It fades out over the first part of the
+   scroll (--p is the hero's progress), just ahead of the name's own fade. */
+.initial {
+  position: absolute;
+  transform: translate(-50%, -52%);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 5.4cqw;
+  line-height: 1;
+  color: #fff;
+  text-shadow: 0 0 0.5cqw rgba(255, 255, 255, 0.35), 0 0.1cqw 0 rgba(0, 0, 0, 0.55);
+  opacity: clamp(0, calc(1 - var(--p, 0) * 4.5), 1);
+  pointer-events: none;
+  user-select: none;
+}
+
 .piece {
   position: absolute;
   will-change: transform;
@@ -98,5 +119,10 @@
     flex: none;
     /* the body sits a little off the frame's middle, so slide it back to the centre line first */
     transform: rotate(-90deg) translateY(calc(var(--yoff) * -100%));
+  }
+
+  /* the knife stands upright here, so turn the letter back to read upright */
+  .initial {
+    transform: translate(-50%, -52%) rotate(90deg);
   }
 }

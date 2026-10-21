@@ -31,18 +31,18 @@ CROP = (430, 20, 950, 745)  # x0, y0, x1, y1 in the 1376x768 render
 
 # name, label, note, bottom-edge V polyline (x, y)
 LAYERS = [
-    ("heatsink", "Heatsink", "Sheds the heat", [(440, 136), (449, 136), (692, 196), (930, 138), (936, 138)]),
-    ("copper_base", "Heat-pipe base", "Spreads it sideways", [(460, 192), (464, 192), (700, 248), (911, 197), (915, 197)]),
-    ("hex_plate", "Vapor chamber", "Moves heat in a thin sheet", [(460, 234), (464, 234), (690, 286), (911, 233), (915, 233)]),
-    ("silver_sheet", "Thermal sheet", "Fills microscopic gaps", [(474, 273), (478, 273), (690, 325), (897, 272), (901, 272)]),
-    ("copper_lid", "Copper lid", "Protects the die", [(464, 323), (468, 323), (690, 378), (908, 329), (912, 329)]),
-    ("die_group", "Die and memory", "Where the math happens", [(463, 400), (557, 399), (630, 413), (750, 413), (823, 399), (912, 400)]),
-    ("interposer", "Interposer", "Wires die to memory", [(469, 426), (473, 426), (690, 489), (902, 425), (906, 425)]),
-    ("substrate", "Substrate", "Routes signals out", [(447, 465), (451, 465), (690, 528), (924, 466), (928, 466)]),
-    ("cap_frame", "Capacitors", "Smooth the power", [(454, 519), (458, 519), (690, 581), (917, 519), (921, 519)]),
-    ("ball_grid", "Solder balls", "Hundreds of connections", [(466, 558), (470, 558), (690, 613), (905, 558), (909, 558)]),
-    ("pcb", "Circuit board", "Power and I/O", [(447, 594), (451, 594), (690, 652), (925, 596), (929, 596)]),
-    ("backplate", "Backplate", "Holds it together", None),  # takes everything below the board
+    ("heatsink", "Interface", "Where people use it", [(440, 136), (449, 136), (692, 196), (930, 138), (936, 138)]),
+    ("copper_base", "Guardrails", "Keeps answers safe", [(460, 192), (464, 192), (700, 248), (911, 197), (915, 197)]),
+    ("hex_plate", "Evaluation", "Catches regressions", [(460, 234), (464, 234), (690, 286), (911, 233), (915, 233)]),
+    ("silver_sheet", "Observability", "Traces every call", [(474, 273), (478, 273), (690, 325), (897, 272), (901, 272)]),
+    ("copper_lid", "Agents", "LangGraph workflows", [(464, 323), (468, 323), (690, 378), (908, 329), (912, 329)]),
+    ("die_group", "LLMs", "Claude and open models", [(463, 400), (557, 399), (630, 413), (750, 413), (823, 399), (912, 400)]),
+    ("interposer", "Prompts and tools", "Instructions and APIs", [(469, 426), (473, 426), (690, 489), (902, 425), (906, 425)]),
+    ("substrate", "Retrieval", "RAG over your own data", [(447, 465), (451, 465), (690, 528), (924, 466), (928, 466)]),
+    ("cap_frame", "Vector search", "ChromaDB, Qdrant", [(454, 519), (458, 519), (690, 581), (917, 519), (921, 519)]),
+    ("ball_grid", "Data pipelines", "Pandas, DuckDB, SQL", [(466, 558), (470, 558), (690, 613), (905, 558), (909, 558)]),
+    ("pcb", "Serving", "FastAPI, Linux, cloud", [(447, 594), (451, 594), (690, 652), (925, 596), (929, 596)]),
+    ("backplate", "Foundations", "Python, algorithms, Git", None),  # takes everything below the board
 ]
 # left-tip top y and slab thickness, per layer: used to stack the layers pressed together
 REF = [(85, 51), (177, 15), (229, 5), (270, 3), (309, 14), (360, 40), (420, 6), (459, 6), (505, 14), (546, 12), (586, 8), (634, 14)]
@@ -95,7 +95,7 @@ def bands(fg, shape, s):
 
 
 TS_HEADER = """/**
- * The twelve layers of the AI accelerator module, cut out of the exploded
+ * The twelve layers of the stack (drawn as an AI accelerator module), cut out of the exploded
  * render (see scripts/chip-sprites). Coordinates are in the cropped render's
  * pixel space (CHIP_SIZE), so the scene scales by one factor. `collapse` is how
  * far (px, down) a layer travels to sit pressed on the layer below, and

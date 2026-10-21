@@ -39,8 +39,8 @@ function layerProgress(u: number, index: number): number {
 const toTranslate = (dy: number, h: number) => `translate3d(0, ${((dy / h) * 100).toFixed(3)}%, 0)`;
 
 /**
- * An AI accelerator module that comes apart as you scroll. The twelve layers
- * were cut out of one exploded render, so moving each straight up or down is
+ * A production AI system, drawn as a chip-like stack, that comes apart as you
+ * scroll. The twelve layers were cut out of one exploded render, so moving each straight up or down is
  * the same as sliding it along the explosion axis. Closed at the top of the
  * scene, fully apart with labels at the bottom of it.
  */
@@ -136,8 +136,8 @@ export function ChipSection() {
             Layers, all the way down
           </h2>
           <p className={styles.body}>
-            Every AI system I build stands on layers like these: data, models, agents and the checks that keep them
-            honest. Scroll to take one apart.
+            A dependable AI system is a stack, not a model: data at the bottom, then retrieval, models and agents, with
+            the checks that keep them honest on top. These are the layers I work across. Scroll to take it apart.
           </p>
           <p className={styles.hint} aria-hidden="true">
             <span className={styles.hintDot} /> Scroll to open it
@@ -150,7 +150,7 @@ export function ChipSection() {
             className={styles.chip}
             style={{ aspectRatio: `${CHIP_SIZE.w} / ${CHIP_SIZE.h}`, '--labels': pinned ? 0 : 1, '--lift': pinned ? 1 : 0 } as CSSProperties}
             role="img"
-            aria-label="An AI accelerator module shown in exploded view, its twelve layers floating apart"
+            aria-label="A production AI system drawn as twelve stacked layers in exploded view, from foundations and data at the bottom to guardrails and the interface at the top"
           >
             {/* Drawn bottom layer first so each upper layer covers the one below it. */}
             {[...chipLayers].reverse().map((layer, r) => {

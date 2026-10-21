@@ -1,38 +1,28 @@
 .hero {
   position: relative;
-  padding: 0 clamp(var(--space-6), 5vw, var(--space-16)) var(--space-24);
+  padding: 0 0 var(--space-24);
+}
+
+/* ---- the pinned stage: one screen, the scroll opens the object ---- */
+
+.stage {
+  --p: 0;
+  position: relative;
+  z-index: 1;
+  height: 100svh;
+  min-height: 34rem;
   overflow: hidden;
 }
 
 .glow {
   position: absolute;
-  top: -10%;
-  right: -10%;
-  width: 40vw;
-  height: 40vw;
-  min-width: 24rem;
-  min-height: 24rem;
-  background: radial-gradient(circle, rgba(var(--color-accent-rgb), 0.16) 0%, transparent 70%);
+  top: 50%;
+  left: 50%;
+  width: min(70vw, 90svh);
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle, rgba(var(--color-accent-rgb), 0.14) 0%, transparent 68%);
   pointer-events: none;
-}
-
-/* Exactly one viewport tall (at minimum) so the About Me content below can
-   never peek above the fold on load — it only appears once the user
-   actually scrolls, per Adiel's note that the loading screen shouldn't
-   already show the start of the About copy. */
-.introScreen {
-  position: relative;
-  z-index: 1;
-  min-height: 100vh;
-  padding-top: calc(var(--nav-height) + var(--space-12));
-  padding-bottom: var(--space-12);
-  display: flex;
-  flex-direction: column;
-  /* centered as one compact group with a fixed gap, not stretched apart via
-     space-between — that left large, uneven voids above/below the avatar
-     once the intro screen was tall enough to guarantee 100vh */
-  justify-content: center;
-  gap: var(--space-12);
 }
 
 @keyframes heroFadeUp {
@@ -46,10 +36,6 @@
   }
 }
 
-/* resumeTab already relies on a static transform (translateY(-50%)
-   rotate(180deg)) for its positioning/orientation — a shared slide-up
-   keyframe touching `transform` would clobber that, so it gets its own
-   opacity-only fade instead. */
 @keyframes heroFadeIn {
   from {
     opacity: 0;
@@ -59,63 +45,88 @@
   }
 }
 
-.top {
+/* ---- the name: the backdrop ---- */
+
+.name {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
-  gap: var(--space-6);
-  flex-wrap: wrap;
+  padding: var(--nav-height) clamp(var(--space-4), 4vw, var(--space-12)) 0;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(3.5rem, 9.4vw, 12rem);
+  letter-spacing: -0.04em;
+  line-height: 0.82;
+  text-transform: uppercase;
+  color: var(--color-text-primary);
+  pointer-events: none;
+  user-select: none;
 }
 
-.intro {
-  opacity: 0;
-  animation: heroFadeUp 0.7s ease 0.1s forwards;
+.first,
+.last {
+  position: relative;
+  display: block;
+  /* steps aside as the object opens, to leave room for the labels */
+  opacity: clamp(0.1, calc(1 - var(--p) * 1.7), 1);
 }
 
-.roleWrap {
-  opacity: 0;
-  animation: heroFadeUp 0.7s ease 0.22s forwards;
+.first {
+  transform: translateX(calc(var(--p) * -7vw));
 }
 
-.stage {
-  opacity: 0;
-  animation: heroFadeUp 0.8s ease 0.34s forwards;
-}
-
-.socials {
-  opacity: 0;
-  animation: heroFadeUp 0.6s ease 0.5s forwards;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .intro,
-  .roleWrap,
-  .stage,
-  .socials,
-  .resumeTab {
-    animation: none;
-    opacity: 1;
-  }
+.last {
+  transform: translateX(calc(var(--p) * 7vw));
 }
 
 .hello {
+  position: absolute;
+  left: 0.08em;
+  top: -1.35em;
   font-family: var(--font-mono);
+  font-weight: 400;
   font-size: var(--fs-sm);
-  color: var(--color-accent);
   letter-spacing: 0.04em;
+  text-transform: none;
+  color: var(--color-accent);
 }
 
-.name {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: var(--fs-2xl);
-  letter-spacing: -0.02em;
-  line-height: 1.02;
-  margin-top: var(--space-2);
+/* ---- the object ---- */
+
+.objectSlot {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: grid;
+  /* a fixed-width track, so an object wider than the screen overflows both sides evenly */
+  grid-template-columns: minmax(0, 1fr);
+  place-items: center;
+  padding: var(--nav-height) 0 4.5rem;
+  opacity: 0;
+  animation: heroFadeIn 0.9s ease 0.2s forwards;
+}
+
+/* ---- bottom row ---- */
+
+.footer {
+  position: absolute;
+  left: clamp(var(--space-4), 4vw, var(--space-12));
+  right: clamp(var(--space-4), 4vw, var(--space-12));
+  bottom: var(--space-8);
+  z-index: 2;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-6);
+  opacity: 0;
+  animation: heroFadeUp 0.7s ease 0.45s forwards;
 }
 
 .roleWrap {
-  text-align: right;
+  text-align: left;
 }
 
 .rolePrefix {
@@ -127,13 +138,37 @@
 .role {
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: var(--fs-xl);
+  font-size: var(--fs-lg);
   color: var(--color-accent);
   min-height: 1.2em;
 }
 
-.stage {
-  height: min(52vh, 34rem);
+.hint {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-family: var(--font-mono);
+  font-size: var(--fs-sm);
+  color: var(--color-accent);
+  /* gone once the object starts to open */
+  opacity: clamp(0, calc(1 - var(--p) * 9), 1);
+}
+
+.hintDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  animation: hintPulse 2s ease-out infinite;
+}
+
+@keyframes hintPulse {
+  from {
+    box-shadow: 0 0 0 0 rgba(var(--color-accent-rgb), 0.6);
+  }
+  to {
+    box-shadow: 0 0 0 10px rgba(var(--color-accent-rgb), 0);
+  }
 }
 
 .socials {
@@ -161,7 +196,7 @@
   position: absolute;
   top: 50%;
   right: 0;
-  z-index: 1;
+  z-index: 2;
   writing-mode: vertical-rl;
   transform: translateY(-50%) rotate(180deg);
   font-family: var(--font-mono);
@@ -183,12 +218,70 @@
   border-color: var(--color-accent);
 }
 
+/* ---- static mode (reduced motion): the object sits open, the name reads above it ---- */
+
+.stage[data-mode='static'] {
+  height: auto;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  padding: calc(var(--nav-height) + var(--space-8)) 0 var(--space-8);
+}
+
+.stage[data-mode='static'] .name {
+  position: relative;
+  inset: auto;
+  padding-top: var(--space-8);
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  gap: 0 0.28em;
+  font-size: clamp(3rem, 8vw, 8rem);
+}
+
+.stage[data-mode='static'] .first,
+.stage[data-mode='static'] .last {
+  opacity: 1;
+  transform: none;
+}
+
+.stage[data-mode='static'] .objectSlot {
+  position: relative;
+  inset: auto;
+  padding: var(--space-8) 0;
+  flex: 1;
+}
+
+.stage[data-mode='static'] .footer {
+  position: relative;
+  inset: auto;
+  margin: 0 clamp(var(--space-4), 4vw, var(--space-12));
+}
+
+.stage[data-mode='static'] .hint {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .objectSlot,
+  .footer,
+  .resumeTab {
+    animation: none;
+    opacity: 1;
+  }
+
+  .hintDot {
+    animation: none;
+  }
+}
+
+/* ---- about ---- */
+
 .about {
   position: relative;
   z-index: 1;
   max-width: var(--content-max-width);
   margin: 0 auto;
-  padding-top: var(--space-16);
+  padding: var(--space-16) clamp(var(--space-6), 5vw, var(--space-16)) 0;
 }
 
 .aboutText,
@@ -305,13 +398,37 @@
   }
 }
 
-@media (max-width: 720px) {
-  .top {
+@media (max-width: 719px) {
+  /* narrow screens: the two words stack above the object instead of flanking it */
+  .stage[data-mode='pinned'] .name {
     flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 0.04em;
+    padding-top: calc(var(--nav-height) + var(--space-8));
+    font-size: 17vw;
   }
 
-  .roleWrap {
-    text-align: left;
+  .stage[data-mode='pinned'] .first,
+  .stage[data-mode='pinned'] .last {
+    transform: none;
+  }
+
+  .stage[data-mode='pinned'] .hello {
+    top: -1.7em;
+  }
+
+  .stage[data-mode='pinned'] .objectSlot {
+    padding-top: 32svh;
+    padding-bottom: 6rem;
+  }
+
+  .footer {
+    flex-wrap: wrap;
+  }
+
+  .hint {
+    display: none;
   }
 
   .resumeTab {

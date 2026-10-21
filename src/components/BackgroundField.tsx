@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Canvas } from '@react-three/fiber';
-import { ParticleField, type HeroLook } from '@/scenes/ParticleField';
+import { ParticleField } from '@/scenes/ParticleField';
 import { NoWebGLFallback } from '@/components/NoWebGLFallback';
 import { hasWebGL2 } from '@/utils/webgl';
 import { deviceTier } from '@/utils/deviceTier';
@@ -14,23 +14,13 @@ const DPR: [number, number] = deviceTier === 'low' ? [1, 1.25] : deviceTier === 
  * the stage the scroll animation plays on. Pauses rendering while the tab is
  * hidden; falls back to a static backdrop without WebGL2.
  */
-export function BackgroundField({ look }: { look: HeroLook }) {
-  const [fontsReady, setFontsReady] = useState(false);
+export function BackgroundField() {
   const [tabVisible, setTabVisible] = useState(true);
 
   useEffect(() => {
-    let cancelled = false;
-    const fontLoad = document.fonts ? document.fonts.load('700 200px "Space Grotesk"') : Promise.resolve([]);
-    fontLoad.finally(() => {
-      if (!cancelled) setFontsReady(true);
-    });
-
     const handleVisibility = () => setTabVisible(!document.hidden);
     document.addEventListener('visibilitychange', handleVisibility);
-    return () => {
-      cancelled = true;
-      document.removeEventListener('visibilitychange', handleVisibility);
-    };
+    return () => document.removeEventListener('visibilitychange', handleVisibility);
   }, []);
 
   if (!hasWebGL2) return <NoWebGLFallback />;
@@ -43,7 +33,7 @@ export function BackgroundField({ look }: { look: HeroLook }) {
         frameloop={tabVisible ? 'always' : 'never'}
         gl={{ antialias: false, powerPreference: 'high-performance' }}
       >
-        <ParticleField look={look} fontsReady={fontsReady} />
+        <ParticleField />
       </Canvas>
     </div>
   );

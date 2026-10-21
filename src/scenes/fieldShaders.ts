@@ -4,42 +4,50 @@
  * endpoint lands exactly where its particle is, drift and cursor push
  * included.
  *
- * Each particle has two homes: `aFormed` (the shape it assembles into near
- * the hero stage) and `aCloud` (its spot in the page-wide background cloud).
- * `uMorph` blends formed -> cloud with a per-particle stagger as the page
- * scrolls; `uAssemble` plays the intro, flying particles in from the cloud.
+ * Two kinds of particle, told apart by `aGroup`:
+ *  - group 0 is "the model": a persistent ball that travels between page
+ *    scenes. It has three shapes (`aShape0..2`, blended by `uShapeW`), is
+ *    placed at `uBall` and sized by `uBallScale`.
+ *  - group 1 is the background cloud: fixed to the viewport with a slow
+ *    scroll parallax, never part of the ball.
+ * `uAssemble` plays the intro, flying every particle in from far away.
  */
 const FIELD_COMMON = /* glsl */ `
 uniform float uTime;
-uniform float uMorph;
 uniform float uAssemble;
 uniform float uSpin;
-uniform float uFormedScale;
-uniform float uDim;
-uniform vec3 uStage;
+uniform float uBallScale;
+uniform float uBallAlpha;
+uniform float uCloudScroll;
+uniform vec3 uBall;
+uniform vec3 uShapeW;
 uniform vec2 uCloudHalf;
 uniform vec2 uMouse;
 
-attribute vec3 aFormed;
+attribute vec3 aShape0;
+attribute vec3 aShape1;
+attribute vec3 aShape2;
 attribute vec3 aCloud;
 attribute float aSeed;
+attribute float aGroup;
 
 vec3 fieldPos() {
+  vec3 f = aShape0 * uShapeW.x + aShape1 * uShapeW.y + aShape2 * uShapeW.z;
   float a = uTime * 0.12 * uSpin;
-  vec3 f = aFormed * uFormedScale;
   f.xz = mat2(cos(a), -sin(a), sin(a), cos(a)) * f.xz;
-  f += uStage;
+  f = f * uBallScale + uBall;
   f += vec3(
     sin(uTime * 0.5 + aSeed * 20.0),
     cos(uTime * 0.45 + aSeed * 31.0),
     sin(uTime * 0.4 + aSeed * 13.0)
-  ) * 0.035;
+  ) * 0.03 * clamp(uBallScale, 0.3, 1.2);
 
   vec3 c = vec3(aCloud.xy * uCloudHalf, aCloud.z);
   c.xy += vec2(sin(uTime * 0.13 + aSeed * 40.0), cos(uTime * 0.11 + aSeed * 27.0)) * 0.3;
+  float depth = 0.5 + (aCloud.z + 2.5) / 5.0;
+  c.y = mod(c.y + uCloudScroll * depth + uCloudHalf.y, 2.0 * uCloudHalf.y) - uCloudHalf.y;
 
-  float m = smoothstep(0.0, 1.0, clamp(uMorph * 1.25 - aSeed * 0.25, 0.0, 1.0));
-  vec3 p = mix(f, c, m);
+  vec3 p = mix(f, c, aGroup);
 
   float e = clamp(uAssemble * 1.5 - aSeed * 0.5, 0.0, 1.0);
   e = 1.0 - pow(1.0 - e, 3.0);
@@ -66,7 +74,7 @@ void main() {
   vec4 mv = modelViewMatrix * vec4(p, 1.0);
   gl_Position = projectionMatrix * mv;
   gl_PointSize = aSize * uPx * (18.0 / -mv.z);
-  vAlpha = mix(1.0, 0.38, uMorph) * uDim;
+  vAlpha = mix(uBallAlpha, 0.38, aGroup);
   vWarm = aWarm;
 }
 `;
@@ -95,7 +103,7 @@ void main() {
   vec3 p = fieldPos();
   gl_Position = projectionMatrix * modelViewMatrix * vec4(p, 1.0);
   float pulse = exp(-pow((aT - fract(uTime * 0.22 + aEdge)) * 5.0, 2.0));
-  vA = (0.1 + 0.55 * pulse) * (1.0 - smoothstep(0.0, 0.5, uMorph)) * uDim;
+  vA = (0.1 + 0.55 * pulse) * uBallAlpha;
 }
 `;
 

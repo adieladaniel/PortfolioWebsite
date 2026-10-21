@@ -1,6 +1,19 @@
 .list {
+  position: relative;
   display: flex;
   flex-direction: column;
+}
+
+/* Where the particle ball's spine stands in this scene: the connector
+   column (the rows' 1fr 1fr 1.4fr grid with 2rem gaps puts it at one unit
+   plus a gap, minus the connector's own -1.5rem offset). Draws nothing. */
+.ballMarker {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: calc((100% - 4rem) / 3.4 + 0.5rem);
+  width: 1px;
+  pointer-events: none;
 }
 
 .row {

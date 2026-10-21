@@ -51,7 +51,7 @@ function Slide({ row, index }: { row: EduRow; index: number }) {
 export function EducationSection() {
   return (
     <Section id="education">
-      <HorizontalScrollPanel heading={<SectionHeading prefix="My" accent="Education" />}>
+      <HorizontalScrollPanel ballId="ball-education" heading={<SectionHeading prefix="My" accent="Education" />}>
         {eduRows.map((row, i) => (
           <Slide key={row.key} row={row} index={i} />
         ))}

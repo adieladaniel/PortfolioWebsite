@@ -255,6 +255,13 @@
 .aboutSide {
   display: flex;
   flex-direction: column;
+  margin-top: var(--space-16);
+}
+
+/* Parking spot for the particle ball during this scene (see ParticleField's
+   ANCHORS) — it draws nothing itself. */
+.ballWindow {
+  min-height: 24rem;
 }
 
 .eyebrow {

@@ -7,7 +7,7 @@ import styles from './ProjectSection.module.css';
 export function ProjectSection() {
   return (
     <Section id="projects">
-      <HorizontalScrollPanel heading={<SectionHeading prefix="My" accent="Projects" />}>
+      <HorizontalScrollPanel ballId="ball-projects" heading={<SectionHeading prefix="My" accent="Projects" />}>
         {projects.map((project, i) => (
           <div key={project.id} className={styles.slide}>
             <div className={styles.top}>

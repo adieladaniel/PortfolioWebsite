@@ -8,6 +8,7 @@ export function ExperienceSection() {
     <Section id="experience">
       <SectionHeading prefix="My career &" accent="experience" />
       <div className={styles.list}>
+        <div id="ball-experience" className={styles.ballMarker} aria-hidden="true" />
         {internships.map((intern) => (
           <div key={intern.id} className={styles.row}>
             <div className={styles.roleCol}>

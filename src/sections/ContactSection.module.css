@@ -3,8 +3,20 @@
 }
 
 .inner {
+  position: relative;
   max-width: var(--content-max-width);
   margin: 0 auto;
+}
+
+/* The particle ball's parking spot for the finale (see ParticleField's
+   ANCHORS); draws nothing. */
+.ballMarker {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: min(24rem, 40vw);
+  aspect-ratio: 1;
+  pointer-events: none;
 }
 
 .heading {

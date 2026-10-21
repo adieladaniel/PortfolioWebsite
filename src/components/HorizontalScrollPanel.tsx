@@ -18,6 +18,8 @@ interface HorizontalScrollPanelProps {
    * horizontal."
    */
   heading?: ReactNode;
+  /** Id for an empty marker covering the container: the particle ball's anchor for this scene (see ParticleField's ANCHORS). */
+  ballId?: string;
 }
 
 /**
@@ -32,7 +34,7 @@ interface HorizontalScrollPanelProps {
  * horizontal (so it doesn't need a second, different layout), just
  * user-driven rather than scroll-jacked.
  */
-export function HorizontalScrollPanel({ heading, children }: PropsWithChildren<HorizontalScrollPanelProps>) {
+export function HorizontalScrollPanel({ heading, ballId, children }: PropsWithChildren<HorizontalScrollPanelProps>) {
   const containerRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
   const prefersReducedMotion = useReducedMotion();
@@ -122,6 +124,7 @@ export function HorizontalScrollPanel({ heading, children }: PropsWithChildren<H
 
   return (
     <div ref={containerRef} className={styles.container}>
+      {ballId && <div id={ballId} className={styles.ballMarker} aria-hidden="true" />}
       {heading}
       <div ref={trackRef} className={styles.track}>
         {children}

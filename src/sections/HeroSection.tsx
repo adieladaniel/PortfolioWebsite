@@ -86,45 +86,48 @@ export function HeroSection() {
             <p className={styles.bio}>{profile.bio}</p>
           </div>
 
-          <div className={styles.aboutSide}>
-            <div className={styles.statRow}>
-              <div className={styles.stat}>
-                <span className={styles.statValue}>
-                  <CountUpNumber value={cgpaNumeric} decimals={1} />
-                </span>
-                <span className={styles.statLabel}>CGPA</span>
-              </div>
-              <div className={styles.stat}>
-                <span className={styles.statValue}>
-                  <CountUpNumber value={codingStats.totalSolved} suffix="+" />
-                </span>
-                <span className={styles.statLabel}>Problems Solved</span>
-              </div>
-              <div className={styles.stat}>
-                <span className={styles.statValue}>
-                  <CountUpNumber value={internships.length} />
-                </span>
-                <span className={styles.statLabel}>Internships</span>
-              </div>
-              <div className={styles.stat}>
-                <span className={styles.statValue}>{gradYear}</span>
-                <span className={styles.statLabel}>Graduating</span>
-              </div>
-            </div>
+          {/* Empty on purpose: the particle ball parks here for this scene. */}
+          <div id="ball-about" className={styles.ballWindow} aria-hidden="true" />
+        </div>
 
-            <div className={styles.skills}>
-              <p className={styles.skillsLabel}>Skills</p>
-              <div className={styles.skillsRow}>
-                {skills.map((skill, i) => (
-                  <span
-                    key={skill.name}
-                    className={styles.skillTag}
-                    style={{ transitionDelay: `${Math.min(i, 24) * 16}ms` }}
-                  >
-                    {skill.name}
-                  </span>
-                ))}
-              </div>
+        <div className={styles.aboutSide}>
+          <div className={styles.statRow}>
+            <div className={styles.stat}>
+              <span className={styles.statValue}>
+                <CountUpNumber value={cgpaNumeric} decimals={1} />
+              </span>
+              <span className={styles.statLabel}>CGPA</span>
+            </div>
+            <div className={styles.stat}>
+              <span className={styles.statValue}>
+                <CountUpNumber value={codingStats.totalSolved} suffix="+" />
+              </span>
+              <span className={styles.statLabel}>Problems Solved</span>
+            </div>
+            <div className={styles.stat}>
+              <span className={styles.statValue}>
+                <CountUpNumber value={internships.length} />
+              </span>
+              <span className={styles.statLabel}>Internships</span>
+            </div>
+            <div className={styles.stat}>
+              <span className={styles.statValue}>{gradYear}</span>
+              <span className={styles.statLabel}>Graduating</span>
+            </div>
+          </div>
+
+          <div className={styles.skills}>
+            <p className={styles.skillsLabel}>Skills</p>
+            <div className={styles.skillsRow}>
+              {skills.map((skill, i) => (
+                <span
+                  key={skill.name}
+                  className={styles.skillTag}
+                  style={{ transitionDelay: `${Math.min(i, 24) * 16}ms` }}
+                >
+                  {skill.name}
+                </span>
+              ))}
             </div>
           </div>
         </div>

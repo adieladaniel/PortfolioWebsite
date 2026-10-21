@@ -10,6 +10,7 @@ export function ContactSection() {
   return (
     <section id="contact" className={styles.contact}>
       <div ref={reveal.ref} className={styles.inner} data-revealed={reveal.revealed}>
+        <div id="ball-contact" className={styles.ballMarker} aria-hidden="true" />
         <h2 className={styles.heading}>Contact</h2>
 
         <div className={styles.grid}>

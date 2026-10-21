@@ -10,9 +10,9 @@ import styles from './AttentionBio.module.css';
 const GROUPS: string[][] = [
   ['final-year', 'b.tech', 'computer', 'science', 'engineering', 'ai/ml', 'student', 'christ', 'university', 'bengaluru'],
   ['looking', 'ahead', 'want', 'spend', 'career', 'building', 'ai'],
-  ['depend', 'actually', 'demos', 'production-grade', 'reliable', 'enough', 'high-stakes'],
-  ['ai', 'llm', 'systems', 'models', 'production-grade', 'building', 'ai/ml'],
-  ['healthcare', 'high-stakes', 'fields', 'oncovision', 'direction', 'taste'],
+  ['depend', 'actually', 'demos', 'production-grade', 'reliable', 'expensive', 'wrong', 'stay'],
+  ['ai', 'llm', 'systems', 'agents', 'real', 'work', 'production-grade', 'building', 'ai/ml'],
+  ['internships', 'cancer', 'detection', 'finance', 'analytics', 'taste', 'real', 'work'],
 ];
 
 /** Neighbouring words always attend to each other a little, like local syntax. */

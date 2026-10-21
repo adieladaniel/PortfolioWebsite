@@ -1,5 +1,3 @@
-import { Suspense } from 'react';
-import { Canvas } from '@react-three/fiber';
 import { profile } from '@/data/profile';
 import { education } from '@/data/education';
 import { internships } from '@/data/internships';
@@ -9,13 +7,8 @@ import { contact } from '@/data/contact';
 import { RoleTicker } from '@/components/RoleTicker';
 import { CountUpNumber } from '@/components/CountUpNumber';
 import { MagneticLink } from '@/components/MagneticLink';
-import { RobotAvatar } from '@/scenes/RobotAvatar';
-import { hasWebGL2 } from '@/utils/webgl';
-import { deviceTier } from '@/utils/deviceTier';
 import { useScrollReveal } from '@/hooks/useScrollReveal';
 import styles from './HeroSection.module.css';
-
-const DPR: [number, number] = deviceTier === 'low' ? [1, 1.25] : deviceTier === 'mid' ? [1, 1.5] : [1, 2];
 
 const cgpaEntry = education.find((entry) => entry.gpa);
 const cgpaNumeric = parseFloat(cgpaEntry?.gpa?.split(' ')[0] ?? '0');
@@ -46,20 +39,9 @@ export function HeroSection() {
           </div>
         </div>
 
-        <div id="hero-stage" className={styles.stage} aria-hidden="true">
-          {hasWebGL2 ? (
-            <Canvas camera={{ fov: 28, position: [0, 0, 13] }} dpr={DPR}>
-              <ambientLight intensity={0.7} />
-              <directionalLight position={[3, 5, 2]} intensity={1.4} color="#ffcf9e" />
-              <directionalLight position={[-3, 1, -2]} intensity={0.35} color="#6b4a35" />
-              <Suspense fallback={null}>
-                <RobotAvatar />
-              </Suspense>
-            </Canvas>
-          ) : (
-            <div className={styles.stagePlaceholder} />
-          )}
-        </div>
+        {/* Empty on purpose: BackgroundField's particle system reads this
+            element's rect and assembles the hero shape here. */}
+        <div id="hero-stage" className={styles.stage} aria-hidden="true" />
 
         <div className={styles.socials}>
           <a

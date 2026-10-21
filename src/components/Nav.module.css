@@ -15,7 +15,7 @@
 }
 
 .nav[data-scrolled='true'] {
-  background: rgba(10, 7, 6, 0.72);
+  background: rgba(var(--color-bg-rgb), 0.72);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   border-bottom-color: var(--color-divider);

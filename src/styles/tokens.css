@@ -1,9 +1,13 @@
 :root {
-  /* Near-black base, warm undertone kept (not a neutral/cool black) — the
-     one deliberate departure from the reference site's literal palette per
-     Adiel's instruction: same layout/flow language, our own color scheme. */
-  --color-bg: #0a0706;
-  --color-bg-elevated: #15100d;
+  /* Cool ink-black base: the particle field behind the page reads cleanest on
+     a slightly blue black. Text stays warm off-white against it. `-rgb` is
+     for translucent panels (nav, switcher) that sit over the field. */
+  --color-bg: #06090c;
+  --color-bg-rgb: 6, 9, 12;
+  --color-bg-elevated: #0d1319;
+
+  /* The one warm highlight: a few particles and "active" moments only. */
+  --color-signal: #ffb454;
 
   /* Theme system: every accent-tinted thing on the site (headings, active
      nav state, glow blobs, box-shadows, borders) reads from these four

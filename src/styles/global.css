@@ -17,15 +17,9 @@
 
 html {
   color-scheme: dark;
-  scroll-behavior: smooth;
-  /* fixed Nav sits on top of anchor-scrolled sections otherwise */
+  /* fixed Nav sits on top of anchor-scrolled sections otherwise (native
+     jumps; with Lenis active SmoothScroll applies the same offset) */
   scroll-padding-top: var(--nav-height);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
 }
 
 body {

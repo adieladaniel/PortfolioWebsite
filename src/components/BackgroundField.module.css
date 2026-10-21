@@ -1,0 +1,8 @@
+/* z-index -1 puts the canvas above the body background but beneath all
+   normal page content, so sections need no z-index of their own. */
+.layer {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}

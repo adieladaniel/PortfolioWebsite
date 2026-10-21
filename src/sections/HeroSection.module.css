@@ -133,18 +133,7 @@
 }
 
 .stage {
-  display: flex;
-  align-items: center;
-  justify-content: center;
   height: min(52vh, 34rem);
-}
-
-.stagePlaceholder {
-  width: min(60%, 22rem);
-  aspect-ratio: 1;
-  border-radius: 50%;
-  background: radial-gradient(circle at 40% 35%, rgba(var(--color-accent-rgb), 0.22), rgba(var(--color-accent-rgb), 0.02) 70%);
-  border: 1px solid var(--color-divider);
 }
 
 .socials {

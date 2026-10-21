@@ -15,7 +15,7 @@ export function ProjectSection() {
               <div className={styles.titleBlock}>
                 <p className={styles.name}>{project.name}</p>
                 <p className={styles.dates}>
-                  {project.startDate} – {project.endDate}
+                  {project.startDate === project.endDate ? project.startDate : `${project.startDate} – ${project.endDate}`}
                 </p>
               </div>
             </div>
@@ -34,16 +34,32 @@ export function ProjectSection() {
             </div>
 
             {(project.link || project.repo) && (
-              <a
-                className={styles.viewLink}
-                data-cursor="open"
-                data-magnetic
-                href={project.link || project.repo}
-                target="_blank"
-                rel="noreferrer"
-              >
-                {project.link ? 'view project ↗' : 'view on github ↗'}
-              </a>
+              <div className={styles.links}>
+                {project.link && (
+                  <a
+                    className={styles.viewLink}
+                    data-cursor="open"
+                    data-magnetic
+                    href={project.link}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    live demo ↗
+                  </a>
+                )}
+                {project.repo && (
+                  <a
+                    className={styles.viewLink}
+                    data-cursor="open"
+                    data-magnetic
+                    href={project.repo}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    view on github ↗
+                  </a>
+                )}
+              </div>
             )}
           </div>
         ))}

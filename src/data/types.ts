@@ -63,7 +63,7 @@ export interface CodingStats {
 export interface Certification {
   name: string;
   issuer: string;
-  date: string;
+  date?: string;
 }
 
 export interface ContactInfo {

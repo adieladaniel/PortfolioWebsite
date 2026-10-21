@@ -31,7 +31,7 @@ const certRows: EduRow[] = certifications.map((cert) => ({
   key: cert.name,
   title: cert.issuer,
   subtitle: cert.name,
-  dateRange: cert.date,
+  dateRange: cert.date ?? '',
 }));
 
 function Slide({ row, index }: { row: EduRow; index: number }) {
@@ -40,7 +40,7 @@ function Slide({ row, index }: { row: EduRow; index: number }) {
       <span className={styles.number}>{String(index + 1).padStart(2, '0')}</span>
       <div className={styles.body}>
         <p className={styles.title}>{row.title}</p>
-        <p className={styles.dates}>{row.dateRange}</p>
+        {row.dateRange && <p className={styles.dates}>{row.dateRange}</p>}
         <p className={styles.subtitle}>{row.subtitle}</p>
         {row.detail && <p className={styles.detail}>{row.detail}</p>}
       </div>

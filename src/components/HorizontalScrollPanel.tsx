@@ -6,16 +6,6 @@ import styles from './HorizontalScrollPanel.module.css';
 
 gsap.registerPlugin(ScrollTrigger);
 
-// The horizontal hot-zone that engages the scroll-jack is the container's
-// own width with this fraction trimmed off *each* side — not a tiny point
-// at dead-center (too strict to actually land the cursor on) and not the
-// container's full width (which also covers the blank gutters beside it
-// and the next slide just starting to peek in from the right edge). A
-// fraction of the container's width, not a fixed pixel count, so the zone
-// keeps tracking "roughly the visible slide cluster" as the container's
-// own width changes across breakpoints.
-const HORIZONTAL_INSET_RATIO = 0.14;
-
 interface HorizontalScrollPanelProps {
   /**
    * Rendered inside the pinned container but *outside* the translating
@@ -64,7 +54,6 @@ export function HorizontalScrollPanel({ heading, children }: PropsWithChildren<H
 
     let ctx: gsap.Context | undefined;
     let cancelled = false;
-    let removeWheelGate: (() => void) | undefined;
 
     // Self-hosted fonts (@fontsource) swap in asynchronously — measuring
     // track/container widths before that swap finishes captured fallback-
@@ -99,7 +88,7 @@ export function HorizontalScrollPanel({ heading, children }: PropsWithChildren<H
           // instead of only once it's been sitting there a while.
           const topMargin = Math.max(0, (window.innerHeight - container.getBoundingClientRect().height) / 2);
 
-          const tween = gsap.to(track, {
+          gsap.to(track, {
             x: -distance,
             ease: 'none',
             scrollTrigger: {
@@ -111,38 +100,6 @@ export function HorizontalScrollPanel({ heading, children }: PropsWithChildren<H
               invalidateOnRefresh: true,
             },
           });
-
-          const st = tween.scrollTrigger;
-
-          // The pin reacts to window.scrollY changing, wherever a wheel
-          // event happened to originate — it has no notion of "over the
-          // block" on its own. The gate box mixes two sources: `track`
-          // gives the slide row's actual top/bottom (excludes the heading
-          // stacked above it inside `container`, whose own un-clipped rect
-          // is far wider than what's visible anyway, since it's the flex
-          // row translated horizontally); `container`'s own clipped
-          // left/right, trimmed in by `HORIZONTAL_INSET_RATIO` on each
-          // side, gives the X bound — the visible slide cluster itself,
-          // not the blank gutters beside the block or the next slide just
-          // starting to peek in at the trailing edge. Re-measured on every
-          // event since it's cheap and this must stay pixel-accurate as
-          // the browser resizes.
-          const handleWheel = (event: WheelEvent) => {
-            if (!st?.isActive) return;
-            const containerRect = container.getBoundingClientRect();
-            const trackRect = track.getBoundingClientRect();
-            const inset = containerRect.width * HORIZONTAL_INSET_RATIO;
-            const inside =
-              event.clientX >= containerRect.left + inset &&
-              event.clientX <= containerRect.right - inset &&
-              event.clientY >= trackRect.top &&
-              event.clientY <= trackRect.bottom;
-            if (inside) return;
-            event.preventDefault();
-            window.scrollTo({ top: event.deltaY > 0 ? st.end + 2 : st.start - 2 });
-          };
-          window.addEventListener('wheel', handleWheel, { passive: false });
-          removeWheelGate = () => window.removeEventListener('wheel', handleWheel);
         }, container);
 
         // This page has two independent HorizontalScrollPanel instances
@@ -159,7 +116,6 @@ export function HorizontalScrollPanel({ heading, children }: PropsWithChildren<H
 
     return () => {
       cancelled = true;
-      removeWheelGate?.();
       ctx?.revert();
     };
   }, [prefersReducedMotion]);

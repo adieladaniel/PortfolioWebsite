@@ -1,19 +1,78 @@
 import type { Project } from './types';
 
-// Most recent first (resume convention).
+// Order is deliberate (set by Adiel), not strictly chronological.
 export const projects: Project[] = [
+  {
+    id: 'oneforall-agent',
+    name: 'OneForAll Agent',
+    tagline: 'Task-agnostic AI agent that does business work in real systems, asks a human before it changes anything, and proves the result.',
+    tech: ['Python', 'FastAPI', 'PostgreSQL', 'Playwright', 'Gemini', 'Cloud Run'],
+    startDate: 'Oct 2026',
+    endDate: 'Present',
+    bullets: [
+      'Built the agent runtime without any agent framework: it plans, drives a real Chromium browser, files and HTTP, and rebuilds its prompt from stored state every turn instead of carrying a growing chat history.',
+      'Enforced safety in code, not in the prompt: risk is classified outside the model, writes pause for a human approval, and an independent read-only verifier re-checks the real systems before a run can count as succeeded.',
+      'Scaled it to a multi-user platform on PostgreSQL alone (SKIP LOCKED job queue with leases, LISTEN/NOTIFY events, encrypted credential vault, per-org isolation). A load test with a deterministic stand-in model passed 280 of 280 runs through a worker kill and an API restart, with 0 isolation leaks across 47,508 responses, backed by 771 automated tests.',
+    ],
+    repo: 'https://github.com/adieladaniel/OneForAll-Agent',
+  },
   {
     id: 'medreasonai',
     name: 'MedReasonAI',
     tagline: 'Agentic multimodal system fusing chest X-ray imaging, clinical labs, and radiology text for disease diagnosis.',
-    tech: ['Python', 'PyTorch', 'DuckDB', 'spaCy', 'torchxrayvision'],
+    tech: ['Python', 'PyTorch', 'scikit-learn', 'DuckDB', 'spaCy', 'torchxrayvision', 'SHAP', 'FastAPI'],
     startDate: 'Jul 2026',
     endDate: 'Present',
     bullets: [
       'Designing an agentic diagnostic assistant that fuses chest X-ray imaging, clinical lab values, and radiology text through an orchestrator-driven pipeline with belief-state tracking and cross-modality consistency checks.',
       'Engineered the data foundation for the pipeline: linked 53,000+ MIMIC-CXR chest X-ray studies to MIMIC-IV clinical/lab records via a custom subject-timestamp relational-join algorithm, using DuckDB to query an 18GB+ lab-events dataset without full in-memory loading.',
       'Built a custom negation-aware clinical NLP labeler (spaCy + negspacy) to cross-validate ICD diagnosis codes against radiology report text, producing a leakage-free, patient-stratified dataset of 15,453 samples.',
+      'Fused the image, blood and text models (validation macro F1 of 0.50, 0.46 and 0.51 on their own) into a multimodal classifier at 0.61 for Normal, Pneumonia and Lung Cancer, with SHAP and Grad-CAM explanations per modality.',
     ],
+    repo: 'https://github.com/adieladaniel/medreason-ai',
+  },
+  {
+    id: 'prognix',
+    name: 'Prognix',
+    tagline: 'Medical equipment failure prediction and maintenance planning: predict, explain, prescribe, prevent.',
+    tech: ['Python', 'scikit-learn', 'XGBoost', 'SHAP', 'FastAPI', 'React', 'TypeScript', 'PostgreSQL'],
+    startDate: 'Sep 2026',
+    endDate: 'Sep 2026',
+    bullets: [
+      'Built a decision-support platform for hospital biomedical teams that predicts device failure risk with a Logistic Regression model chosen for recall (0.60) and explains every prediction with SHAP drivers.',
+      'Ranks equipment by Clinical Criticality-Weighted Priority (failure probability x clinical criticality x utilization), so a 60%-risk ventilator outranks a 90%-risk weighing scale, then turns the ranking into a daily plan with a capacity-constrained scheduler and counterfactual what-ifs.',
+      'Shipped the full stack: FastAPI backend, an 11-page React and TypeScript frontend, a tool-based maintenance agent that works without an LLM key, and a human review lifecycle for alerts. Telemetry is synthetic and labeled that way in the UI.',
+    ],
+    link: 'https://prognix.vercel.app/',
+    repo: 'https://github.com/adieladaniel/Prognix',
+  },
+  {
+    id: 'promptsense-ai',
+    name: 'PromptSense AI',
+    tagline: 'Hybrid rule-based and transformer analyzer that scores an LLM prompt on 8 quality dimensions and rewrites it 7 ways.',
+    tech: ['Python', 'DeBERTa-v3', 'spaCy', 'Streamlit', 'tiktoken', 'Gemini'],
+    startDate: 'Sep 2026',
+    endDate: 'Sep 2026',
+    bullets: [
+      'Built a hybrid scorer that blends regex rules 50/50 with a local DeBERTa-v3 zero-shot classifier across 8 prompt-quality dimensions, falling back to rule-only scoring if the model cannot load.',
+      'Generates 7 rewritten versions of a prompt (role-based, chain-of-thought, few-shot, structured and more), chosen by which dimensions scored weak, alongside token, complexity and hallucination-risk estimates.',
+      'Added an 18-prompt benchmark harness and an optional LLM-as-judge evaluation on Gemini to measure whether the optimized prompts actually produce better responses.',
+    ],
+    repo: 'https://github.com/adieladaniel/PromptSense-AI',
+  },
+  {
+    id: 'obsidian-rag-assistant',
+    name: 'Obsidian RAG Assistant',
+    tagline: 'Fully local RAG assistant that answers questions about an Obsidian vault, with citations back to the source notes.',
+    tech: ['Python', 'FastAPI', 'Ollama', 'Chroma', 'React', 'Vite'],
+    startDate: 'Aug 2026',
+    endDate: 'Aug 2026',
+    bullets: [
+      'Built an agentic retrieval loop: retrieve chunks, pull in wikilinked notes, and when the context is not enough, reformulate the query and retry up to 3 times, answering only from retrieved context and citing the source notes.',
+      'Added streaming answers, follow-up question rewriting, #tag-scoped retrieval, and incremental reindexing that re-embeds only changed notes.',
+      'Lets any answer be saved back into the vault as a tagged, wikilinked note that is searchable immediately. Runs fully on local models (llama3.2, nomic-embed-text) with no API keys, checked by an 8-case retrieval eval.',
+    ],
+    repo: 'https://github.com/adieladaniel/obsidian-rag-assistant',
   },
   {
     id: 'scholarsync',

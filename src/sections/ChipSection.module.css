@@ -5,7 +5,7 @@
 .stage {
   position: relative;
   display: grid;
-  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  grid-template-columns: minmax(0, 0.62fr) minmax(0, 1.38fr);
   align-items: center;
   gap: var(--space-8);
   max-width: var(--content-max-width);
@@ -86,7 +86,9 @@
 .visual {
   display: flex;
   justify-content: flex-start;
-  padding-left: clamp(0px, 4vw, 4rem);
+  padding-left: 0;
+  /* keeps the open stack's top clear of the nav bar */
+  padding-top: var(--space-8);
 }
 
 .chip {
@@ -96,7 +98,7 @@
   position: relative;
   /* the closed stack hangs low in the render's frame, so lift it to centre while it is closed */
   transform: translateY(calc(var(--lift) * -26%));
-  height: min(78svh, 46rem);
+  height: min(70svh, 43rem);
   max-width: 100%;
 }
 
@@ -193,7 +195,7 @@
   position: absolute;
   display: flex;
   flex-direction: column;
-  gap: 1px;
+  gap: 0;
   white-space: nowrap;
   pointer-events: none;
   opacity: clamp(0, calc(var(--labels) * 13 - var(--i) - 0.4), 1);
@@ -202,14 +204,14 @@
 
 .name {
   font-family: var(--font-mono);
-  font-size: var(--fs-xs);
+  font-size: clamp(0.8125rem, 1.95svh, 1.125rem);
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--color-text-primary);
 }
 
 .note {
-  font-size: 0.8125rem;
+  font-size: clamp(0.75rem, 1.85svh, 1.0625rem);
   color: var(--color-text-tertiary);
 }
 

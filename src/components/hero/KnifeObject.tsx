@@ -5,7 +5,7 @@ import { clamp01, smooth, type HeroObjectHandle } from './types';
 import styles from './HeroObject.module.css';
 
 /** Room each side of the knife for the labels, in source pixels. */
-const PAD_X = 380;
+const PAD_X = 470;
 const FRAME = { w: G.size.w + PAD_X * 2, h: G.size.h };
 /** Gap between a tool tip and its label. */
 const GAP = 46;

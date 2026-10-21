@@ -89,15 +89,19 @@
 
 .name {
   font-family: var(--font-mono);
-  font-size: var(--fs-xs);
+  font-size: clamp(0.9375rem, 2.1svh, 1.1875rem);
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--color-text-primary);
 }
 
 .note {
-  font-size: 0.8125rem;
+  font-size: clamp(0.875rem, 1.95svh, 1.125rem);
+  line-height: 1.25;
   color: var(--color-text-tertiary);
+  /* long notes wrap rather than run off the screen */
+  white-space: normal;
+  max-width: 11.5em;
 }
 
 /* Phones: the labels would run off the screen, so the knife speaks for itself.

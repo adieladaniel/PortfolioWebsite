@@ -20,8 +20,8 @@ const LAYER_COUNT = chipLayers.length;
  * collide, and each leader line bends from its layer's edge to its label.
  */
 const LABEL_X = 548;
-const LABEL_TOP = 70;
-const LABEL_BOTTOM = 650;
+const LABEL_TOP = 34;
+const LABEL_BOTTOM = 706;
 const labelY = (i: number) => LABEL_TOP + (i * (LABEL_BOTTOM - LABEL_TOP)) / (LAYER_COUNT - 1);
 const BEND_X = 514;
 

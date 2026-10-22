@@ -35,6 +35,10 @@ export const KnifeObject = forwardRef<HeroObjectHandle, { initial?: number }>(fu
       el.dataset.focus = focus === name ? 'true' : 'false';
     });
     frameRef.current?.style.setProperty('--labels', clamp01(labels).toFixed(3));
+    // with one tool picked out, the other tools' captions step back too
+    frameRef.current?.querySelectorAll<HTMLElement>('[data-tag]').forEach((el) => {
+      el.style.setProperty('--tagdim', focus !== null && el.dataset.tag !== focus ? '0.3' : '1');
+    });
   };
 
   useImperativeHandle(ref, () => ({ apply }));
@@ -116,6 +120,7 @@ export const KnifeObject = forwardRef<HeroObjectHandle, { initial?: number }>(fu
             key={`tag-${t.name}`}
             className={styles.tag}
             data-side={isLeft ? 'left' : 'right'}
+            data-tag={t.name}
             style={{ left: pct(x, FRAME.w), top: pct(t.tipY, FRAME.h), '--i': i } as CSSProperties}
             aria-hidden="true"
           >

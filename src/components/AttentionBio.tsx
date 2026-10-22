@@ -46,6 +46,8 @@ export function AttentionBio({ text }: AttentionBioProps) {
   const keys = useMemo(() => words.map(normalize), [words]);
   const containerRef = useRef<HTMLParagraphElement>(null);
   const wordRefs = useRef<Array<HTMLSpanElement | null>>([]);
+  // no hover on a touchscreen, so the caption says tap
+  const [touch] = useState(() => window.matchMedia('(hover: none)').matches);
   const [picked, setPicked] = useState<number | null>(null);
   const [arcs, setArcs] = useState<Arc[]>([]);
 
@@ -125,7 +127,9 @@ export function AttentionBio({ text }: AttentionBioProps) {
           ))}
         </svg>
       </p>
-      <p className={styles.caption}>Hover a word: arcs show what it attends to (illustrative, hand-mapped)</p>
+      <p className={styles.caption}>
+        {touch ? 'Tap' : 'Hover'} a word: arcs show what it attends to (illustrative, hand-mapped)
+      </p>
     </div>
   );
 }

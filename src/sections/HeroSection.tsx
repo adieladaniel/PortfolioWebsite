@@ -22,19 +22,67 @@ gsap.registerPlugin(ScrollTrigger);
 
 /** The pinned, scroll-driven hero needs motion; with reduced motion the object simply sits open. */
 const PINNED_QUERY = '(prefers-reduced-motion: no-preference)';
+/** Phones are narrower than this; the scene is laid out differently there. */
+const PHONE_QUERY = '(max-width: 719px)';
+
+interface Span {
+  from: number;
+  to: number;
+}
+
 /**
- * One pinned scene, in four beats, as fractions of its scroll: the knife opens
- * and is labelled (hero), the labels and the name leave while the knife glides
- * to the right edge, the About text comes in on the left, then the knife's tools
- * are picked out one at a time, each with the project that proves it.
+ * One pinned scene, in beats, as fractions of its scroll: the knife opens and is
+ * labelled (hero), the labels and the name leave while the knife glides aside and
+ * the About text comes in, then the knife's tools are picked out one at a time,
+ * each with the project that proves it.
+ *
+ * On a laptop the text sits beside the knife for the whole tour. A phone cannot
+ * hold the text, the knife and the card at a readable size at once, so there the
+ * bio gets the screen on its own, then leaves, and the knife comes back to the
+ * middle with the card under it for the tour (`bioOut`, `cardIn`).
  */
-const SCROLL_LENGTH = 5.6;
-const OPEN = { from: 0.012, to: 0.2 };
-const LABELS_IN = 0.19;
-const LABELS_OUT = 0.29;
-const GLIDE = { from: 0.31, to: 0.44 };
-const BIO_IN = { from: 0.37, to: 0.46 };
-const FOCUS_FROM = 0.47;
+interface Phases {
+  /** Viewport heights of scroll the whole scene lasts. */
+  length: number;
+  /** Fraction of the scene the opening hero takes, which paces the name's fade. */
+  heroSpan: number;
+  open: Span;
+  labelsIn: number;
+  labelsOut: number;
+  glide: Span;
+  bioIn: Span;
+  bioOut: Span | null;
+  cardIn: Span;
+  focusFrom: number;
+}
+
+const DESKTOP: Phases = {
+  length: 5.6,
+  heroSpan: 0.43,
+  open: { from: 0.012, to: 0.2 },
+  labelsIn: 0.19,
+  labelsOut: 0.29,
+  glide: { from: 0.31, to: 0.44 },
+  bioIn: { from: 0.37, to: 0.46 },
+  bioOut: null,
+  cardIn: { from: 0.37, to: 0.46 },
+  focusFrom: 0.47,
+};
+
+const PHONE: Phases = {
+  length: 7,
+  heroSpan: 0.344,
+  open: { from: 0.01, to: 0.16 },
+  labelsIn: 0.15,
+  labelsOut: 0.24,
+  glide: { from: 0.26, to: 0.34 },
+  bioIn: { from: 0.31, to: 0.39 },
+  bioOut: { from: 0.56, to: 0.62 },
+  cardIn: { from: 0.6, to: 0.66 },
+  focusFrom: 0.67,
+};
+
+const ramp = (p: number, span: Span) => smooth((p - span.from) / (span.to - span.from));
 /** Order the tools are picked out in: alternating left and right. */
 const FOCUS_ORDER = knifeGeometry.openOrder;
 const TOOL_COUNT = FOCUS_ORDER.length;
@@ -54,6 +102,7 @@ export function HeroSection() {
   const stageRef = useRef<HTMLDivElement>(null);
   const objectRef = useRef<HeroObjectHandle>(null);
   const [pinned, setPinned] = useState(() => window.matchMedia(PINNED_QUERY).matches);
+  const [phone, setPhone] = useState(() => window.matchMedia(PHONE_QUERY).matches);
   /** Which tool is picked out in the card beside the About text (an index into FOCUS_ORDER), or -1. */
   const [focus, setFocus] = useState(-1);
   const focusRef = useRef(-1);
@@ -61,6 +110,13 @@ export function HeroSection() {
   useEffect(() => {
     const query = window.matchMedia(PINNED_QUERY);
     const handleChange = (event: MediaQueryListEvent) => setPinned(event.matches);
+    query.addEventListener('change', handleChange);
+    return () => query.removeEventListener('change', handleChange);
+  }, []);
+
+  useEffect(() => {
+    const query = window.matchMedia(PHONE_QUERY);
+    const handleChange = (event: MediaQueryListEvent) => setPhone(event.matches);
     query.addEventListener('change', handleChange);
     return () => query.removeEventListener('change', handleChange);
   }, []);
@@ -77,21 +133,34 @@ export function HeroSection() {
 
     let cancelled = false;
     let trigger: ScrollTrigger | null = null;
+    const ph = phone ? PHONE : DESKTOP;
     const apply = (progress: number) => {
-      const labels = smooth((progress - LABELS_IN) / 0.05) * (1 - smooth((progress - LABELS_OUT) / 0.05));
       const picked =
-        progress < FOCUS_FROM ? -1 : Math.min(TOOL_COUNT - 1, Math.floor(((progress - FOCUS_FROM) / (1 - FOCUS_FROM)) * TOOL_COUNT));
+        progress < ph.focusFrom
+          ? -1
+          : Math.min(TOOL_COUNT - 1, Math.floor(((progress - ph.focusFrom) / (1 - ph.focusFrom)) * TOOL_COUNT));
+      const gone = ramp(progress, ph.glide);
+      const bioOut = ph.bioOut ? ramp(progress, ph.bioOut) : 0;
+      const bio = ramp(progress, ph.bioIn) * (1 - bioOut);
+      const card = ramp(progress, ph.cardIn);
+      // the captions show with the opening, and on a phone come back (softer) for the tour
+      const heroLabels = smooth((progress - ph.labelsIn) / 0.05) * (1 - smooth((progress - ph.labelsOut) / 0.05));
       objectRef.current?.apply({
-        open: clamp01((progress - OPEN.from) / (OPEN.to - OPEN.from)),
-        labels,
+        open: clamp01((progress - ph.open.from) / (ph.open.to - ph.open.from)),
+        labels: Math.max(heroLabels, phone ? card * 0.9 : 0),
         focus: picked < 0 ? null : (FOCUS_ORDER[picked] ?? null),
       });
-      // --p paces the name, the initial and the hint; --shift moves the knife; --bio brings the About text in
-      stage.style.setProperty('--p', clamp01(progress / 0.43).toFixed(3));
-      stage.style.setProperty('--shift', smooth((progress - GLIDE.from) / (GLIDE.to - GLIDE.from)).toFixed(3));
-      const bio = smooth((progress - BIO_IN.from) / (BIO_IN.to - BIO_IN.from));
+      // --p paces the name, the initial and the hint; --gone takes the name and footer away; --shift moves
+      // the knife aside (on a phone it comes back for the tour); --bio brings the About text in; --card and
+      // --tour (phone only) bring the card in and lift the knife to make room for it
+      stage.style.setProperty('--p', clamp01(progress / ph.heroSpan).toFixed(3));
+      stage.style.setProperty('--gone', gone.toFixed(3));
+      stage.style.setProperty('--shift', (gone * (1 - bioOut)).toFixed(3));
       stage.style.setProperty('--bio', bio.toFixed(3));
-      stage.dataset.about = bio > 0.02 ? 'true' : 'false';
+      stage.style.setProperty('--card', card.toFixed(3));
+      stage.style.setProperty('--tour', (phone ? card : 0).toFixed(3));
+      stage.dataset.about = bio > 0.02 || card > 0.02 ? 'true' : 'false';
+      stage.dataset.bioOut = bioOut > 0.5 ? 'true' : 'false';
       if (picked !== focusRef.current) {
         focusRef.current = picked;
         setFocus(picked);
@@ -106,7 +175,7 @@ export function HeroSection() {
         trigger = ScrollTrigger.create({
           trigger: stage,
           start: 'top top',
-          end: () => `+=${Math.round(window.innerHeight * SCROLL_LENGTH)}`,
+          end: () => `+=${Math.round(window.innerHeight * ph.length)}`,
           pin: true,
           invalidateOnRefresh: true,
           onUpdate: (self) => apply(self.progress),
@@ -120,9 +189,9 @@ export function HeroSection() {
     return () => {
       cancelled = true;
       trigger?.kill();
-      ['--p', '--shift', '--bio'].forEach((name) => stage.style.removeProperty(name));
+      ['--p', '--gone', '--shift', '--bio', '--card', '--tour'].forEach((name) => stage.style.removeProperty(name));
     };
-  }, [pinned]);
+  }, [pinned, phone]);
 
   return (
     <section id="about" className={styles.hero}>
@@ -194,8 +263,10 @@ export function HeroSection() {
 
         {/* The About text, which comes in on the left as the knife glides to the right. */}
         <div className={styles.bioPane}>
-          <p className={styles.eyebrow}>About Me</p>
-          <AttentionBio text={profile.bio} />
+          <div className={styles.bioText}>
+            <p className={styles.eyebrow}>About Me</p>
+            <AttentionBio text={profile.bio} />
+          </div>
 
           <div className={styles.toolCard} data-active={focus >= 0} aria-live="polite">
             {/* Re-mounted on every change (the key), so the sweep and glow play again each time the tool changes. */}

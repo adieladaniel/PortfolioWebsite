@@ -7,8 +7,11 @@
 
 .stage {
   --p: 0;
+  --gone: 0;
   --shift: 0;
   --bio: 0;
+  --card: 0;
+  --tour: 0;
   position: relative;
   z-index: 1;
   height: 100svh;
@@ -73,7 +76,7 @@
   position: relative;
   display: block;
   /* steps aside as the object opens, to leave room for the labels */
-  opacity: calc(clamp(0.1, calc(1 - var(--p) * 1.7), 1) * (1 - var(--shift)));
+  opacity: calc(clamp(0.1, calc(1 - var(--p) * 1.7), 1) * (1 - var(--gone)));
 }
 
 .first {
@@ -137,7 +140,7 @@
 
 .roleWrap,
 .socials {
-  opacity: calc(1 - var(--shift));
+  opacity: calc(1 - var(--gone));
 }
 
 .rolePrefix {
@@ -576,14 +579,16 @@
 }
 
 @media (max-width: 719px) {
-  /* narrow screens: the two words stack above the object instead of flanking it */
+  /* The name reads down the screen around the knife: ADIEL above it, the A on its handle, DANIEL below. */
   .stage[data-mode='pinned'] .name {
     flex-direction: column;
-    align-items: flex-start;
-    justify-content: flex-start;
-    gap: 0.04em;
-    padding-top: calc(var(--nav-height) + var(--space-8));
+    align-items: center;
+    justify-content: center;
+    /* a little more than the closed knife's length, so each word clears its ends */
+    gap: 25svh;
+    padding: var(--nav-height) 0 4.5rem;
     font-size: 17vw;
+    text-align: center;
   }
 
   .stage[data-mode='pinned'] .first,
@@ -593,28 +598,54 @@
 
   .stage[data-mode='pinned'] .hello {
     top: -1.7em;
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
   }
 
+  /* The knife drifts aside behind the bio, then comes back to the middle and lifts a little
+     (--tour) to leave room for the card under it. */
   .stage[data-mode='pinned'] .objectSlot {
-    padding-top: 32svh;
-    padding-bottom: 6rem;
-    transform: translate3d(calc(var(--shift) * 34vw), calc(var(--shift) * 8svh), 0);
+    transform: translate3d(calc(var(--shift) * 34vw), calc(var(--shift) * 6svh - var(--tour) * 8svh), 0)
+      scale(calc(1 - var(--tour) * 0.14));
   }
 
-  /* behind the text, so it stays readable */
   .stage[data-mode='pinned'] .objectSlot > div {
     opacity: calc(1 - var(--shift) * 0.7);
   }
 
-  .stage[data-mode='pinned'] .toolCard {
-    min-height: 13rem;
+  /* The bio and the card are separate beats here, each placed on the screen itself. The bio keeps a
+     large size: it has the whole screen while it is up. */
+  .stage[data-mode='pinned'] .bioPane {
+    display: contents;
   }
 
-  .stage[data-mode='pinned'] .bioPane {
-    width: auto;
+  .stage[data-mode='pinned'] .bioText {
+    position: absolute;
+    z-index: 2;
+    left: var(--space-6);
+    right: var(--space-6);
+    top: calc(var(--nav-height) + var(--space-4));
+    bottom: var(--space-6);
+    display: flex;
+    flex-direction: column;
+    justify-content: safe center;
+    opacity: var(--bio);
+    --fs-lg: clamp(1.0625rem, 2.65svh, 1.4rem);
+  }
+
+  .stage[data-bio-out='true'] .bioText {
+    visibility: hidden;
+  }
+
+  .stage[data-mode='pinned'] .toolCard {
+    position: absolute;
+    z-index: 2;
+    left: var(--space-4);
     right: var(--space-4);
-    justify-content: flex-start;
-    gap: var(--space-4);
+    bottom: var(--space-6);
+    min-height: 13rem;
+    opacity: var(--card);
   }
 
   .footer {

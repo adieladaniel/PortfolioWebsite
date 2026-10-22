@@ -1,3 +1,8 @@
+.word {
+  display: inline-block;
+  white-space: nowrap;
+}
+
 .char {
   display: inline-block;
   text-align: center;

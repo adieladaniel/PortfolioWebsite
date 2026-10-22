@@ -82,22 +82,45 @@ export function DecodeChars({ text, revealed, charClass, charStyle }: DecodeChar
     };
   }, [revealed, chars]);
 
+  // Every letter is its own inline block, and a line may break between any two of those, which
+  // split long words ("experi / ence") on a narrow screen. Each word is wrapped so a line can only
+  // break at the spaces between words.
+  const segments = useMemo(() => {
+    const out: Array<{ indices: number[]; isSpace: boolean }> = [];
+    chars.forEach((char, i) => {
+      const isSpace = char === ' ';
+      const last = out[out.length - 1];
+      if (last && !isSpace && !last.isSpace) last.indices.push(i);
+      else out.push({ indices: [i], isSpace });
+    });
+    return out;
+  }, [chars]);
+
+  const letter = (i: number) => (
+    <span
+      key={i}
+      ref={(el) => {
+        refs.current[i] = el;
+      }}
+      className={[styles.char, charClass?.(i)].filter(Boolean).join(' ')}
+      style={charStyle?.(i)}
+      data-revealed={revealed}
+    >
+      {shown(chars[i] ?? '')}
+    </span>
+  );
+
   return (
     <>
-      {chars.map((char, i) => (
-        <span
-          // eslint-disable-next-line react/no-array-index-key
-          key={i}
-          ref={(el) => {
-            refs.current[i] = el;
-          }}
-          className={[styles.char, charClass?.(i)].filter(Boolean).join(' ')}
-          style={charStyle?.(i)}
-          data-revealed={revealed}
-        >
-          {shown(char)}
-        </span>
-      ))}
+      {segments.map((segment) =>
+        segment.isSpace ? (
+          segment.indices.map(letter)
+        ) : (
+          <span key={segment.indices[0]} className={styles.word}>
+            {segment.indices.map(letter)}
+          </span>
+        ),
+      )}
     </>
   );
 }

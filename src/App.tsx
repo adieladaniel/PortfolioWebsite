@@ -1,3 +1,4 @@
+import { Analytics } from '@vercel/analytics/react';
 import { BackgroundField } from '@/components/BackgroundField';
 import { CustomCursor } from '@/components/CustomCursor';
 import { LiquidButtons } from '@/components/LiquidButtons';
@@ -28,6 +29,7 @@ function App() {
         <EducationSection />
         <ContactSection />
       </main>
+      <Analytics />
     </>
   );
 }
